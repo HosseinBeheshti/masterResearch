@@ -5,11 +5,12 @@ tic;
 %% signal parameter
 n   = 2;     % signal dimension
 s   = 2;       % sparsity
-m   = 10;       % number of measurment
+m   = 100;       % number of measurment
+R   = 100;
 %% Generating a s-sparse signal in R^n
 x_temp = zeros(n,1);
 rp = randperm(n);
-x_temp(rp(1:s)) = randn(s,1); 
+x_temp(rp(1:s)) = nthroot(R, n).*randn(s,1); 
 r = norm(x_temp);
 x0 = [x_temp ; -1];
 %% Gaussian sensing matrix and associated 1-bit sensing
@@ -22,7 +23,7 @@ z_l1 = cvx1(y,n,s,m,N);
 %% BIHT 
 z_biht = BIHT(y,n,s,m,N);
 %% Adaptive algorithm 1
-step    = 1;
+step    = 2;
 z_adpt = adpt(x_temp,n,m,step);
 %% IGP
 x_biht = z_biht.*(sqrt(r^2+1));
