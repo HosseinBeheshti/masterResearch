@@ -1,14 +1,17 @@
-function z_adpt = adpt(x_temp,n,m,step,R)
+function z_adpt = adpt(x_temp,n,m,s,step,R)
 % measure procedure
     A       = randn(m,n);
     Phi     = zeros(n,m);
     drct    = zeros(n,m);
     y       = zeros(m,1);
+    tau     = zeros(m,1);
     y(1)    = sign(A(1,:)*x_temp-A(1,:)*Phi(:,1));
+    tau(1)  = A(1,:)*Phi(:,1);
     for i=1:m-1
         drct(:,i)   = y(i).*A(i,:)';
     	Phi(:,i+1)  = Phi(:,i)+step.*(drct(:,i))/norm(drct(:,i));
-        y(i+1)      = sign(A(i+1,:)*x_temp-A(i+1,:)*Phi(:,i+1));
+        y(i+1)      = theta(A(i+1,:)*x_temp-A(i+1,:)*Phi(:,i+1));
+        tau(i+1)    = A(i+1,:)*Phi(:,i+1);
     end
 % visiual adaptivity for n = 2
     if n == 2 
@@ -26,6 +29,12 @@ function z_adpt = adpt(x_temp,n,m,step,R)
         end 
         hold off;
     end
-% recovery procedure
-    z_adpt = 1;
+%% recovery procedure
+% cvx 
+    cvx_begin 
+        variable z_adpt(n);
+        minimize(-y'*(A*z_adpt-tau));
+        subject to
+            norm(z_adpt,1) <= sqrt(s);
+    cvx_end
 end

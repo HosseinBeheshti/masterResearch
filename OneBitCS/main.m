@@ -5,8 +5,8 @@ tic;
 %% signal parameter
 n   = 2;        % signal dimension
 s   = 2;        % sparsity
-m   = 100;      % number of measurment
-R   = 100;
+m   = 20;      % number of measurment
+R   = 100;      % amplitude
 %% Generating a s-sparse signal in R^n
 x_temp              = zeros(n,1);
 rp                  = randperm(n);
@@ -24,7 +24,8 @@ z0  = x0./sqrt(r^2+1);
 z_biht  = BIHT(y,n,s,m,N);
 %% Adaptive algorithm 1
 step    = 1;
-z_adpt  = adpt(x_temp,n,m,step,R);
+z_adpt  = adpt(x_temp,n,m,s,step,R);
+err     = z_adpt-x_temp
 %% IGP
 x_biht  = z_biht.*(sqrt(r^2+1));
 % x_l1    = z_l1.*(sqrt(r^2+1));
