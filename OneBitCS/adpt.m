@@ -21,7 +21,7 @@ function z_adpt = adpt(x_temp,n,m,s,step,R)
         t1 = -R:0.1:R;
         for i =1:m
             t2 = -((A(i,1)/A(i,2))*(t1-Phi(1,i)))+Phi(2,i);
-            pause(1)
+            pause(0.1)
             plot(t1,t2);
             plot(Phi(1,i),Phi(2,i),'*'); 
             xlim([-4*nthroot(R, n) 4*nthroot(R, n)])
@@ -32,9 +32,10 @@ function z_adpt = adpt(x_temp,n,m,s,step,R)
 %% recovery procedure
 % cvx 
     cvx_begin 
-        variable z_adpt(n);
-        minimize(-y'*(A*z_adpt-tau));
+        variable x_adpt(n);
+        minimize(norm(x_adpt,1));
         subject to
-            norm(z_adpt,1) <= sqrt(s);
+            A*x_adpt<=(-y.*tau);
     cvx_end
+z_adpt = x_adpt;    
 end
