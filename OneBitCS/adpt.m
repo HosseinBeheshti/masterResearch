@@ -13,11 +13,22 @@ function z_adpt = adpt(x_temp,n,m,s,step,R)
         y(i+1)      = theta(A(i+1,:)*x_temp-A(i+1,:)*Phi(:,i+1));
         tau(i+1)    = A(i+1,:)*Phi(:,i+1);
     end
-% visiual adaptivity for n = 2
+%% recovery procedure
+% cvx 
+    cvx_begin 
+        variable x_adpt(n);
+        minimize(norm(x_adpt,1));
+        subject to
+            A*x_adpt<=(-y.*tau);
+    cvx_end
+z_adpt = x_adpt;    
+
+%% visiual adaptivity for n = 2
     if n == 2 
         figure(1);
         hold on;
-        plot(x_temp(1),x_temp(2),'.r','markersize',40);   
+        plot(x_temp(1),x_temp(2),'.r','markersize',40);    
+        plot(z_adpt(1),z_adpt(2),'.b','markersize',35);  
         t1 = -R:0.1:R;
         for i =1:m
             t2 = -((A(i,1)/A(i,2))*(t1-Phi(1,i)))+Phi(2,i);
@@ -29,13 +40,4 @@ function z_adpt = adpt(x_temp,n,m,s,step,R)
         end 
         hold off;
     end
-%% recovery procedure
-% cvx 
-    cvx_begin 
-        variable x_adpt(n);
-        minimize(norm(x_adpt,1));
-        subject to
-            A*x_adpt<=(-y.*tau);
-    cvx_end
-z_adpt = x_adpt;    
 end

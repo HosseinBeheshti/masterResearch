@@ -3,10 +3,10 @@ close all;
 clc;
 tic;
 %% signal parameter
-n   = 5;        % signal dimension
-s   = 5;        % sparsity
-m   = 5;      % number of measurment
-R   = 1;      % amplitude
+n   = 2;        % signal dimension
+s   = 2;        % sparsity
+m   = 20;      % number of measurment
+R   = 100;      % amplitude
 %% Generating a s-sparse signal in R^n
 x_temp              = zeros(n,1);
 rp                  = randperm(n);
