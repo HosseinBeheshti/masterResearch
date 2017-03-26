@@ -2,32 +2,67 @@ clear;
 close all;
 clc;
 tic;
+%% plot control
+o_plot              = 0;
+cs_m_en             = 0;
 %% signal parameter
-n   = 2;        % signal dimension
-s   = 2;        % sparsity
-m   = 20;      % number of measurment
-R   = 100;      % amplitude
+n                   = 2;% signal dimension
+s                   = 1;% sparsity
+% number of measurment      
+if cs_m_en
+    m               = ceil(s*log(n/s));
+else
+    m            	= 20;
+end
+gain                = 10;% gain
 %% Generating a s-sparse signal in R^n
-x_temp              = zeros(n,1);
+x_org               = zeros(n,1);
 rp                  = randperm(n);
-x_temp(rp(1:s))     = nthroot(R, n).*randn(s,1); 
-r                   = norm(x_temp);
-x0                  = [x_temp ; -1];
+x_org(rp(1:s))      = gain.*randn(s,1); 
+r                   = norm(x_org);
+x0                  = [x_org ; -1];
 %% Gaussian sensing matrix and associated 1-bit sensing
-N   = randn(m,n+1);
-y   = theta(N*x0);
+N                   = randn(m,n+1);
+y                   = theta(N*x0);
 %% Gnomonic projection(GP)
-z0  = x0./sqrt(r^2+1);
+z0                  = x0./sqrt(r^2+1);
 %% convex optimization cvx1
-% z_l1 = cvx1(y,n,s,m,N);
+z_pv                = pv(y,n,s,m,N);
 %% BIHT 
-z_biht  = BIHT(y,n,s,m,N);
+z_biht              = BIHT(y,n,s,m,N);
 %% Adaptive algorithm 1
-step    = 1;
-z_adpt  = adpt(x_temp,n,m,s,step,R);
-t_err     = sum(abs(z_adpt-x_temp))
+step                = 1;
+x_adpt              = adpt(x_org,n,m,s,step);
 %% IGP
-x_biht  = z_biht.*(sqrt(r^2+1));
-% x_l1    = z_l1.*(sqrt(r^2+1));
+x_biht_temp         = z_biht.*(sqrt(r^2+1));
+x_biht              = x_biht_temp(1:end-1);
+x_pv_temp           = z_pv.*(sqrt(r^2+1));
+x_pv                = x_pv_temp(1:end-1);
+%% plot result
+if o_plot
+figure
+subplot(2,1,1);
+hold on;
+stem(x_pv,'s');
+stem(x_biht,'o');
+stem(x_adpt,'*');
+stem(x_org,'d');
+legend('x_{pv}','x_{biht}','x_{adpt}','x0');
+hold off;
+
+subplot(2,1,2);
+hold on;
+stem(x_org-x_pv,'s');
+stem(x_org-x_biht,'o');
+stem(x_org-x_adpt,'*');
+legend('x_{pv} err','x_{biht} err','x_{adpt} err');
+hold off;
+end
+%%
+disp('pv biht adpt')
+disp(norm(x_org-x_pv))
+disp(norm(x_org-x_biht))
+disp(norm(x_org-x_adpt))
+disp(m)
 %%
 toc
