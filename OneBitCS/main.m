@@ -4,9 +4,10 @@ clc;
 tic;
 %% plot control
 o_plot              = 0;
-cs_m_en             = 0;
+cs_m_en             = 1;
+rnd_x_en            = 1;
 %% signal parameter
-n                   = 2;% signal dimension
+n                   = 200;% signal dimension
 s                   = 1;% sparsity
 % number of measurment      
 if cs_m_en
@@ -14,11 +15,14 @@ if cs_m_en
 else
     m            	= 20;
 end
-gain                = 10;% gain
 %% Generating a s-sparse signal in R^n
-x_org               = zeros(n,1);
-rp                  = randperm(n);
-x_org(rp(1:s))      = gain.*randn(s,1); 
+if rnd_x_en
+    x_org           = zeros(n,1);
+    rp              = randperm(n);
+    x_org(rp(1:s))  = randn(s,1);     
+else
+    x_org           = [10;0];
+end
 r                   = norm(x_org);
 x0                  = [x_org ; -1];
 %% Gaussian sensing matrix and associated 1-bit sensing
@@ -31,7 +35,7 @@ z_pv                = pv(y,n,s,m,N);
 %% BIHT 
 z_biht              = BIHT(y,n,s,m,N);
 %% Adaptive algorithm 1
-step                = 1;
+step                = 0.1;
 x_adpt              = adpt(x_org,n,m,s,step);
 %% IGP
 x_biht_temp         = z_biht.*(sqrt(r^2+1));
