@@ -4,11 +4,11 @@ clc;
 tic;
 %% plot control
 o_plot              = 0;
-cs_m_en             = 1;
+cs_m_en             = 0;
 rnd_x_en            = 1;
 %% signal parameter
-n                   = 200;% signal dimension
-s                   = 1;% sparsity
+n                   = 2;% signal dimension
+s                   = 2;% sparsity
 % number of measurment      
 if cs_m_en
     m               = ceil(s*log(n/s));
@@ -35,8 +35,7 @@ z_pv                = pv(y,n,s,m,N);
 %% BIHT 
 z_biht              = BIHT(y,n,s,m,N);
 %% Adaptive algorithm 1
-step                = 0.1;
-x_adpt              = adpt(x_org,n,m,s,step);
+x_adpt              = adpt(x_org,n,m);
 %% IGP
 x_biht_temp         = z_biht.*(sqrt(r^2+1));
 x_biht              = x_biht_temp(1:end-1);

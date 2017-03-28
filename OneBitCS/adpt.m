@@ -1,5 +1,6 @@
-function x_adpt = adpt(x_org,n,m,s,step)
+function x_adpt = adpt(x_org,n,m)
 % measure procedure
+    step    = 1;
     A       = randn(m,n);
     Phi     = zeros(n,m);
     drct    = zeros(n,m);
