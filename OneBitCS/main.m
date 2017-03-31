@@ -5,7 +5,7 @@ tic;
 %% plot control
 o_plot              = 0;
 cs_m_en             = 0;
-rnd_x_en            = 1;
+rnd_x_en            = 0;
 %% signal parameter
 n                   = 2;% signal dimension
 s                   = 2;% sparsity
@@ -21,7 +21,7 @@ if rnd_x_en
     rp              = randperm(n);
     x_org(rp(1:s))  = randn(s,1);     
 else
-    x_org           = [10;0];
+    x_org           = [100;0];
 end
 r                   = norm(x_org);
 x0                  = [x_org ; -1];
@@ -35,7 +35,8 @@ z_pv                = pv(y,n,s,m,N);
 %% BIHT 
 z_biht              = BIHT(y,n,s,m,N);
 %% Adaptive algorithm 1
-x_adpt              = adpt(x_org,n,m);
+t                   = 5;
+x_adpt              = adpt(x_org,n,m,s,t);
 %% IGP
 x_biht_temp         = z_biht.*(sqrt(r^2+1));
 x_biht              = x_biht_temp(1:end-1);
@@ -67,5 +68,6 @@ disp(norm(x_org-x_pv))
 disp(norm(x_org-x_biht))
 disp(norm(x_org-x_adpt))
 disp(m)
+disp(r)
 %%
 toc
