@@ -5,7 +5,7 @@ tic;
 %% plot control
 o_plot              = 0;
 cs_m_en             = 0;
-rnd_x_en            = 0;
+dtr_x               = 0;
 %% signal parameter
 n                   = 2;% signal dimension
 s                   = 2;% sparsity
@@ -16,12 +16,12 @@ else
     m            	= 20;
 end
 %% Generating a s-sparse signal in R^n
-if rnd_x_en
+if dtr_x && (n == 2)
+    x_org           = [100;0];  
+else
     x_org           = zeros(n,1);
     rp              = randperm(n);
-    x_org(rp(1:s))  = randn(s,1);     
-else
-    x_org           = [100;0];
+    x_org(rp(1:s))  = randn(s,1);   
 end
 r                   = norm(x_org);
 x0                  = [x_org ; -1];
@@ -36,7 +36,7 @@ z_pv                = pv(y,n,s,m,N);
 z_biht              = BIHT(y,n,s,m,N);
 %% Adaptive algorithm 1
 t                   = 5;
-x_adpt              = adpt(x_org,n,m,s,t);
+x_adpt              = adpt(x_org,n,m,s);
 %% IGP
 x_biht_temp         = z_biht.*(sqrt(r^2+1));
 x_biht              = x_biht_temp(1:end-1);

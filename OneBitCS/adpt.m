@@ -1,6 +1,6 @@
-function x_adpt = adpt(x_org,n,m,s,t)
+function x_adpt = adpt(x_org,n,m,s)
 % measure procedure
-    step    = zeros(m,1);
+    step    = ones(m,1);
     A       = randn(m,n);
     Phi     = zeros(n,m);
     drct    = zeros(n,m);
@@ -10,15 +10,12 @@ function x_adpt = adpt(x_org,n,m,s,t)
     y(1)    = theta(A(1,:)*x_org-A(1,:)*Phi(:,1));
     yp(1)   = A(1,:)*x_org-A(1,:)*Phi(:,1);
     tau(1)  = A(1,:)*Phi(:,1);
-    step(1) = 1;
-    for i=1:t-1:m-1
-        for j=1:t
-            drct(:,i+j)   = y(i+j).*A(i+j,:)';
-            Phi(:,i+j+1)  = Phi(:,i+j)+step(i+j).*(drct(:,i+j))/norm(drct(:,i+j));
-            y(i+j+1)      = theta(A(i+j+1,:)*x_org-A(i+j+1,:)*Phi(:,i+j+1));
-            yp(i+j+1)     = A(i+j+1,:)*x_org-A(i+1,:)*Phi(:,i+j+1);
-            tau(i+j+1)    = A(i+j+1,:)*Phi(:,i+1);
-        end
+    for i=1:m-1
+        drct(:,i)   = y(i).*A(i,:)';
+    	Phi(:,i+1)  = Phi(:,i)+step(i).*(drct(:,i))/norm(drct(:,i));
+        y(i+1)      = theta(A(i+1,:)*x_org-A(i+1,:)*Phi(:,i+1));
+        yp(i+1)     = A(i+1,:)*x_org-A(i+1,:)*Phi(:,i+1);
+        tau(i+1)    = A(i+1,:)*Phi(:,i+1);
     end
 %% recovery procedure
 % cvx 
@@ -30,15 +27,15 @@ function x_adpt = adpt(x_org,n,m,s,t)
                 if y(i)>=0
                     A(i,:)*x_cvx >= tau(i);
                 else
-                    A(i,:)*x_cvx < tau(i);
+                    A(i,:)*x_cvx <= tau(i);
                 end
             end
     cvx_end
     
 % Best K-term (threshold)
 x_adpt                      = x_cvx;
-[trash, x_adpt_idx]         = sort(abs(x_adpt), 'descend');
-x_adpt(x_adpt_idx(s+1:end)) = 0;  
+% [trash, x_adpt_idx]         = sort(abs(x_adpt), 'descend');
+% x_adpt(x_adpt_idx(s+1:end)) = 0;  
 
 %% visiual adaptivity for n = 2
     if n == 2 
