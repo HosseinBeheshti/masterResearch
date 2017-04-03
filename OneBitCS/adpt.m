@@ -1,8 +1,10 @@
 function x_adpt = adpt(x_org,n,m,s)
 % measure procedure
-    step    = ones(m,1);
+    dh      = 1;
+    step    = zeros(m,1);
     A       = randn(m,n);
     Phi     = zeros(n,m);
+    nrm_Phi = zeros(m,1);
     drct    = zeros(n,m);
     y       = zeros(m,1);
     yp      = zeros(m,1);
@@ -10,8 +12,18 @@ function x_adpt = adpt(x_org,n,m,s)
     y(1)    = theta(A(1,:)*x_org-A(1,:)*Phi(:,1));
     yp(1)   = A(1,:)*x_org-A(1,:)*Phi(:,1);
     tau(1)  = A(1,:)*Phi(:,1);
+    step(1:dh) = 1;
     for i=1:m-1
         drct(:,i)   = y(i).*A(i,:)';
+        nrm_Phi(i)  = norm(Phi(:,i));
+        j = floor(i/dh);
+        if j>=1
+            if nrm_Phi(dh*j)-nrm_Phi(dh*(j-1)+1) >= 2
+                step(dh*j:dh*(j+1)) = step(dh*(j-1)+1)*2;
+            else
+                step(dh*j:dh*(j+1)) = step(dh*(j-1)+1)/2;
+            end
+        end   
     	Phi(:,i+1)  = Phi(:,i)+step(i).*(drct(:,i))/norm(drct(:,i));
         y(i+1)      = theta(A(i+1,:)*x_org-A(i+1,:)*Phi(:,i+1));
         yp(i+1)     = A(i+1,:)*x_org-A(i+1,:)*Phi(:,i+1);
@@ -58,4 +70,6 @@ x_adpt                      = x_cvx;
         plot(x_adpt(1),x_adpt(2),'.b','markersize',35);  
         hold off;
     end
+    figure(2)
+    stem(step);    
 end
