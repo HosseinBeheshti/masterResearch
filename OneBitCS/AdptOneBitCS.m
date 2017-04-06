@@ -1,6 +1,6 @@
-function x_adpt = adpt(x_org,n,m,s)
+function x_adpt = AdptOneBitCS(x_org,n,s,m,plot_adpt)
 % measure procedure
-    dh      = 1;
+    dh      = m;
     step    = zeros(m,1);
     A       = randn(m,n);
     Phi     = zeros(n,m);
@@ -16,7 +16,7 @@ function x_adpt = adpt(x_org,n,m,s)
     for i=1:m-1
         drct(:,i)   = y(i).*A(i,:)';
         nrm_Phi(i)  = norm(Phi(:,i));
-        j = floor(i/dh);
+        j           = floor(i/dh);
         if j>=1
             if nrm_Phi(dh*j)-nrm_Phi(dh*(j-1)+1) >= 2
                 step(dh*j:dh*(j+1)) = step(dh*(j-1)+1)*2;
@@ -49,7 +49,8 @@ x_adpt                      = x_cvx;
 % [trash, x_adpt_idx]         = sort(abs(x_adpt), 'descend');
 % x_adpt(x_adpt_idx(s+1:end)) = 0;  
 
-%% visiual adaptivity for n = 2
+%% visiual adaptivity 
+if plot_adpt
     if n == 2 
         close all;
         figure(1);
@@ -59,7 +60,7 @@ x_adpt                      = x_cvx;
         t1 = -4*nrm_inf:0.1:4*nrm_inf;
         for i =1:m
             t2 = -((A(i,1)/A(i,2))*(t1-Phi(1,i)))+Phi(2,i);
-            pause(0.5)
+%             pause(0.5)
             plot(t1,t2);
             plot(Phi(1,i),Phi(2,i),'*'); 
             xlim([-2*nrm_inf 2*nrm_inf]);
@@ -69,7 +70,8 @@ x_adpt                      = x_cvx;
         pause(1)
         plot(x_adpt(1),x_adpt(2),'.b','markersize',35);  
         hold off;
+        figure(2)
+        stem(step);
     end
-    figure(2)
-    stem(step);    
+end
 end
