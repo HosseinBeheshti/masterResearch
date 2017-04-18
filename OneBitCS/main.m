@@ -20,8 +20,13 @@ if cs_m_en
 else
     m            	= 1000;
 end
+Rmax = 1; %upper bound for ||x||
+Rmin = .1; %lower bound for ||x||
+
+tau =Rmin% Threshold parameter: an alternative is 
+tau2 = Rmin/2+Rmax/2 %(works better with convex minimizaiton);
 %% signal generator
-x_org               = signal_generator(n,s,m,dtr_x);
+x_org               = signal_generator(n, s, dtr_x, Rmin, Rmax);
 %% convex optimization Gpv
 x_Gpv               = Gpv(x_org,n,s,m,plot_Gpv);
 %% convex optimization Apv
@@ -30,6 +35,8 @@ x_Gpv               = Gpv(x_org,n,s,m,plot_Gpv);
 x_Gbiht             = GBIHT(x_org,n,s,m,plot_GBIHT);
 %% AdptOneBitCS algorithm 1
 x_adpt              = AdptOneBitCS(x_org,n,s,m,plot_adpt);
+%% 
+[ xhatPV, xsharpPV, normxEstPV, xhatAlt, xsharpAlt, normxEstAlt, normxEstEDF ] = KarinKnudson(x_org, n, s, m, tau, tau2);
 %% plot result
 if o_plot
 figure
@@ -50,7 +57,9 @@ stem(x_org-x_adpt,'*');
 legend('x_{pv} err','x_{biht} err','x_{AdptOneBitCS} err');
 hold off;
 end
-%%
+%% norm 
+
+
 Gpv_err         = r_err_c(x_Gpv,x_org);
 % Apv_err       = r_err_c(x_Apv,x_org);
 Gbiht_err       = r_err_c(x_Gbiht,x_org);
