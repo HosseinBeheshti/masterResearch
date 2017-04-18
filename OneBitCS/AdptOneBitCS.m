@@ -60,7 +60,7 @@ if plot_adpt
         t1 = -4*nrm_inf:0.1:4*nrm_inf;
         for i =1:m
             t2 = -((A(i,1)/A(i,2))*(t1-Phi(1,i)))+Phi(2,i);
-            %             pause(0.5)
+            pause(0.5)
             plot(t1,t2);
             plot(Phi(1,i),Phi(2,i),'*');
             xlim([-2*nrm_inf 2*nrm_inf]);
@@ -70,8 +70,8 @@ if plot_adpt
         pause(1)
         plot(x_adpt(1),x_adpt(2),'.b','markersize',35);
         hold off;
-        figure(2)
-        stem(step);
+%         figure(2)
+%         stem(step);
     end
 end
 end

@@ -14,11 +14,8 @@ function x_Apv = Apv(x_org,n,s,m,plot_Apv)
         variable u_temp(1);
         minimize(norm([x_temp;u_temp],1));
         subject to
-            sum(abs(A*x_temp+(u_temp/tau).*b))  = m;
-            for i=1:m
-                y(i) = theta(A(i,:)*x_temp+(u_temp/tau).*b(i));                
-            end
-
+            sum((A*x_temp+(u_temp/tau).*b).*y) == m ;
+            (A*x_temp+(u_temp/tau).*b).*y >= 0
         cvx_end
     x_Apv   = tau.*(x_temp)./u_temp;
 end
