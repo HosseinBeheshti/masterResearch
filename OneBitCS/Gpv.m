@@ -1,4 +1,4 @@
-function x_Gpv = Gpv(x_org,n,s,m,plot_Gpv)
+function x_Gpv = Gpv(x_org,n,s,m)
 %   mam \sum^{m}_{i=1}  y_{i}<n_{i},z^{\prime}> s.t. ||z^{\prime}||_1 \leq \sqrt{s} \quad  ||z^{\prime}||_2 \leq 1   (1)
     %% Gnomonic projection(GP)
     r     	= norm(x_org);

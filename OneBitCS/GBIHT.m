@@ -1,4 +1,4 @@
-function x_Gbiht = GBIHT(x_org,n,s,m,plot_GBIHT)
+function x_Gbiht = GBIHT(x_org,n,s,m)
 %  Gnomonic BIHT
 %% Gnomonic projection(GP)
     r     	= norm(x_org);

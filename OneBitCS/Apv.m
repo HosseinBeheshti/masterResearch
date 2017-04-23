@@ -1,4 +1,4 @@
-function x_Apv = Apv(x_org,n,s,m,plot_Apv)
+function x_Apv = Apv(x_org,n,s,m)
 %   min ||(z,u)||_1  
 %   z\in R^n u\in R    
 %   s.t
