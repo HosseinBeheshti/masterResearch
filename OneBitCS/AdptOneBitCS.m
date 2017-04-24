@@ -31,7 +31,7 @@ for i=1:m-1
 end
 %% recovery procedure
 % cvx
-cvx_begin
+cvx_begin quiet;
 variable x_cvx(n);
 minimize(norm(x_cvx,1));
 subject to
