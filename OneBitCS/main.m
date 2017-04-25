@@ -3,18 +3,19 @@ close all;
 clc;
 tic;
 %% monte carlo
-itr_avg     = 40;
-itr_m       = 10;
+itr_avg     = 1;
+itr_m       = 1;
 %% plot control
-plot_adpt           = 0;
+plot_adpt           = 1;
 %%
 cs_m_en             = 0;
 dtr_x               = 0;
 %% signal parameter
-n                   = 5;% signal dimension
+n                   = 2;% signal dimension
 s                   = 2; % sparsity
 % number of measurment
-m_temp           	= 300; % ceil(s*log(n/s));
+m_temp           	= 50;
+% m_temp              = ceil(s*log(n/s));
 
 Rmax    = 20; %upper bound for ||x||
 Rmin    = 10; %lower bound for ||x||
@@ -41,7 +42,7 @@ avg_Alt_err     = zeros(1,itr_m);
 avg_adpt_err    = zeros(1,itr_m);
 
 for i=1:itr_m
-    m   = m_temp+10*itr_m;
+    m   = m_temp+10*(itr_m-1);
     for j=1:itr_avg
         %% signal generator
         [x_org(:,j), trueNorm(j)]   = signal_generator(n, s, dtr_x, Rmin, Rmax);
