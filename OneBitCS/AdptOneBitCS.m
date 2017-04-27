@@ -2,20 +2,18 @@ function x_adpt = AdptOneBitCS(x_org,n,s,m,Rmax,plot_adpt)
 blk_s       = 10;
 stage       = ceil(m/blk_s);
 A_var       = 1;
-Phi_var     = zeros(stage);
+Phi_var     = sqrt(Rmax).*ones(stage,1);
 A           = zeros(blk_s,n,stage);
 Phi         = zeros(n,blk_s,stage);
 ofset       = zeros(n,stage);
 yp          = zeros(blk_s,1,stage);
 y           = zeros(blk_s,1,stage);
 tau         = zeros(blk_s,1,stage);
-
-Phi_var(1)  = sqrt(Rmax);
 for i = 1:stage
     % measure procedure
     for j = 1:blk_s
         A(j,:,i)    = normrnd(0,A_var,1,n);
-        Phi(:,j,i)	= normrnd(0,Phi_var,n,1)+ofset(:,i);
+        Phi(:,j,i)	= normrnd(0,Phi_var(i),n,1)+ofset(:,i);
         yp(j,:,i)   = A(j,:,i)*x_org-A(j,:,i)*Phi(:,j,i);
         y(j,:,i)    = theta(yp(j,:,i));
         tau(j,:,i)  = A(j,:,i)*Phi(:,j,i);
