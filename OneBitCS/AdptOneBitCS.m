@@ -41,6 +41,7 @@ for i = 1:stage
         x_adpt          = x_cvx;
     else
         ofset(:,i+1)   	= x_cvx;
+        Phi_var         = Phi_var;
     end
     
     %% visiual adaptivity
