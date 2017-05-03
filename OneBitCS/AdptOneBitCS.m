@@ -35,8 +35,14 @@ for i = 1:stage
     cvx_end
     
     % Computing Gaussian width
+    cvx_begin quiet;
+    variable w_cvx;
+    minimize w_cvx;
+    subject to
+    w_cvx
+    cvx_end
     
-    
+    % set parameter
     if i==stage(end)
         x_adpt          = x_cvx;
     else
