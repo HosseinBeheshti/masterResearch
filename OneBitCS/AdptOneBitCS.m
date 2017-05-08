@@ -62,7 +62,7 @@ for i = 1:stage
         x_adpt          = x_cvx;
     else
         ofset(:,i+1)   	= x_cvx;
-        %         Phi_var(i+1)    = w_cvx(i);
+        Phi_var(i+1)    = w_cvx(i);
     end
     
     %% visiual adaptivity
@@ -76,22 +76,23 @@ for i = 1:stage
             t1 = -4*nrm_inf:0.1:4*nrm_inf;
             for j =1:blk_s
                 t2 = -((A(j,1,i)/A(j,2,i))*(t1-Phi(1,j,i)))+Phi(2,j,i);
-                %                 pause(0.5)
                 plot(t1,t2);
                 xlim([-2*nrm_inf 2*nrm_inf]);
                 ylim([-2*nrm_inf 2*nrm_inf]);
             end
             % norm constraint
             ang=0:0.01:2*pi;
-            xp = Rmax*cos(ang);
-            yp = Rmax*sin(ang);
-            plot(xp,yp);
+            cx1 = Rmax*cos(ang);
+            cx2 = Rmax*sin(ang);
+            plot(cx1,cx2);
             % x and xhat
             plot(x_org(1),x_org(2),'.r','markersize',40);
-            pause(1)
             plot(x_cvx(1),x_cvx(2),'.b','markersize',35);
             pause(1)
             hold off;
+        end
+        if i == stage
+            disp(w_cvx);
         end
     end
 end
