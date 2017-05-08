@@ -46,23 +46,23 @@ for i = 1:stage
     for k = 1:i
         for j=1:blk_s
             if y(j,:,k)>=0
-                A(j,:,k)*x_cvx >= tau(j,:,k);
+                A(j,:,k)*(z_cvx+x_cvx) >= tau(j,:,k);
             else
-                A(j,:,k)*x_cvx <= tau(j,:,k);
+                A(j,:,k)*(z_cvx+x_cvx) <= tau(j,:,k);
             end
         end
     end
     norm(z_cvx)     <= Rmax;
     cvx_end
     
-    w_cvx(i)    = abs(g*z_cvx);
+    w_cvx(i)    = abs(g*z_cvx)./norm(g);
     
     % set parameter
     if i==stage(end)
         x_adpt          = x_cvx;
     else
         ofset(:,i+1)   	= x_cvx;
-%         Phi_var(i+1)    = w_cvx(i);
+        %         Phi_var(i+1)    = w_cvx(i);
     end
     
     %% visiual adaptivity
@@ -76,11 +76,17 @@ for i = 1:stage
             t1 = -4*nrm_inf:0.1:4*nrm_inf;
             for j =1:blk_s
                 t2 = -((A(j,1,i)/A(j,2,i))*(t1-Phi(1,j,i)))+Phi(2,j,i);
-%                 pause(0.5)
+                %                 pause(0.5)
                 plot(t1,t2);
                 xlim([-2*nrm_inf 2*nrm_inf]);
                 ylim([-2*nrm_inf 2*nrm_inf]);
             end
+            % norm constraint
+            ang=0:0.01:2*pi;
+            xp = Rmax*cos(ang);
+            yp = Rmax*sin(ang);
+            plot(xp,yp);
+            % x and xhat
             plot(x_org(1),x_org(2),'.r','markersize',40);
             pause(1)
             plot(x_cvx(1),x_cvx(2),'.b','markersize',35);
