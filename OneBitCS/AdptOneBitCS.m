@@ -74,11 +74,13 @@ for i = 1:stage
             plot(x_org(1),x_org(2),'.r','markersize',40);
             nrm_inf = norm(x_org,inf);
             t1 = -4*nrm_inf:0.1:4*nrm_inf;
-            for j =1:blk_s
-                t2 = -((A(j,1,i)/A(j,2,i))*(t1-Phi(1,j,i)))+Phi(2,j,i);
-                plot(t1,t2);
-                xlim([-2*nrm_inf 2*nrm_inf]);
-                ylim([-2*nrm_inf 2*nrm_inf]);
+            for k = 1:i
+                for j =1:blk_s
+                    t2 = -((A(j,1,k)/A(j,2,k))*(t1-Phi(1,j,k)))+Phi(2,j,k);
+                    plot(t1,t2);
+                    xlim([-2*nrm_inf 2*nrm_inf]);
+                    ylim([-2*nrm_inf 2*nrm_inf]);
+                end
             end
             % norm constraint
             ang=0:0.01:2*pi;
