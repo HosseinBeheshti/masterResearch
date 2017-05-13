@@ -27,11 +27,7 @@ for i = 1:stage
     subject to
     for k = 1:i
         for j=1:blk_s
-            if y(j,:,k)>=0
-                A(j,:,k)*x_cvx >= tau(j,:,k);
-            else
-                A(j,:,k)*x_cvx <= tau(j,:,k);
-            end
+            y(:,:,k).*(A(:,:,k)*x_cvx-tau(:,:,k)) >= 0;
         end
     end
     norm(x_cvx)     <= Rmax;
@@ -71,6 +67,11 @@ for i = 1:stage
             close all;
             figure(1);
             hold on;
+            % norm constraint
+            ang=0:0.01:2*pi;
+            cx1 = Rmax*cos(ang);
+            cx2 = Rmax*sin(ang);
+            plot(cx1,cx2);
             plot(x_org(1),x_org(2),'.r','markersize',40);
             nrm_inf = norm(x_org,inf);
             t1 = -4*nrm_inf:0.1:4*nrm_inf;
@@ -82,11 +83,6 @@ for i = 1:stage
                     ylim([-2*nrm_inf 2*nrm_inf]);
                 end
             end
-            % norm constraint
-            ang=0:0.01:2*pi;
-            cx1 = Rmax*cos(ang);
-            cx2 = Rmax*sin(ang);
-            plot(cx1,cx2);
             % x and xhat
             plot(x_org(1),x_org(2),'.r','markersize',40);
             plot(x_cvx(1),x_cvx(2),'.b','markersize',35);
