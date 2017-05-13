@@ -1,5 +1,4 @@
-function x_adpt = AdptOneBitCS(x_org,n,s,m,Rmax,plot_adpt)
-blk_s       = 10;
+function x_adpt = AdptOneBitCS(x_org,n,s,m,Rmax,blk_s,plot_adpt)
 stage       = ceil(m/blk_s);
 A_var       = 1;
 Phi_var     = sqrt(Rmax).*ones(stage,1);
@@ -26,39 +25,31 @@ for i = 1:stage
     minimize(norm(x_cvx,1));
     subject to
     for k = 1:i
-        for j=1:blk_s
-            y(:,:,k).*(A(:,:,k)*x_cvx-tau(:,:,k)) >= 0;
-        end
+        y(:,:,k).*(A(:,:,k)*x_cvx-tau(:,:,k)) >= 0;
     end
     norm(x_cvx)     <= Rmax;
     cvx_end
     
     % Computing Gaussian width
-    g = normrnd(0,1,1,n);
+    g = x_cvx'./norm(x_cvx);
     cvx_begin quiet;
     variable z_cvx(n);
     maximize g*z_cvx;
     subject to
     for k = 1:i
-        for j=1:blk_s
-            if y(j,:,k)>=0
-                A(j,:,k)*(z_cvx+x_cvx) >= tau(j,:,k);
-            else
-                A(j,:,k)*(z_cvx+x_cvx) <= tau(j,:,k);
-            end
-        end
+        y(:,:,k).*(A(:,:,k)*z_cvx-tau(:,:,k)) >= 0;
     end
     norm(z_cvx)     <= Rmax;
     cvx_end
     
-    w_cvx(i)    = abs(g*z_cvx)./norm(g);
+    w_cvx(i)    = norm(z_cvx-x_cvx);
     
     % set parameter
     if i==stage(end)
         x_adpt          = x_cvx;
     else
-        ofset(:,i+1)   	= x_cvx;
-        Phi_var(i+1)    = w_cvx(i);
+        ofset(:,i+1)   	= (z_cvx+x_cvx)/2;
+        Phi_var(i+1)    = sqrt(w_cvx(i));
     end
     
     %% visiual adaptivity
@@ -90,7 +81,7 @@ for i = 1:stage
             hold off;
         end
         if i == stage
-            disp(w_cvx);
+            plot(w_cvx);
         end
     end
 end

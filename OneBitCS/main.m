@@ -10,14 +10,16 @@ plot_adpt           = 1;
 %%
 dtr_x               = 0;
 %% signal parameter
-n                   = 2;% signal dimension
+n                   = 2; % signal dimension
 s                   = 2; % sparsity
 % number of measurment
-m_temp           	= 50;
+m_temp           	= 30;
 % m_temp              = ceil(s*log(n/s));
 
-Rmax    = 30; %upper bound for ||x||
-Rmin    = 20; %lower bound for ||x||
+blk_s   = 30;
+
+Rmax    = 90; %upper bound for ||x||
+Rmin    = 50; %lower bound for ||x||
 
 tau     = Rmin;% Threshold parameter: an alternative is
 tau2    = Rmin/2+Rmax/2; %(works better with convex minimizaiton);
@@ -52,7 +54,7 @@ for i=1:itr_m
         %% convex optimization Apv
         % x_Apv(:,i)               = Apv(x_org,n,s,m);
         %% AdptOneBitCS algorithm 1
-        x_AdptOneBitCS(:,j)     = AdptOneBitCS(x_org(:,j),n,s,m,Rmax,plot_adpt);
+        x_AdptOneBitCS(:,j)     = AdptOneBitCS(x_org(:,j),n,s,m,Rmax,blk_s,plot_adpt);
         %%
         [ xhatPV(:,j), xsharpPV(:,j), normxEstPV(j), xhatAlt(:,j), xsharpAlt(:,j), normxEstAlt(j), normxEstEDF(j) ] = KarinKnudson(x_org(:,j), n, s, m, tau, tau2);
     end
