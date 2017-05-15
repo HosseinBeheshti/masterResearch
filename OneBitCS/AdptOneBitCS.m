@@ -66,7 +66,7 @@ for i = 1:stage
             plot(x_org(1),x_org(2),'.r','markersize',40);
             nrm_inf = norm(x_org,inf);
             t1 = -4*nrm_inf:0.1:4*nrm_inf;
-            for k = 1:i
+            for k = i:i
                 for j =1:blk_s
                     t2 = -((A(j,1,k)/A(j,2,k))*(t1-Phi(1,j,k)))+Phi(2,j,k);
                     plot(t1,t2);
@@ -77,11 +77,11 @@ for i = 1:stage
             % x and xhat
             plot(x_org(1),x_org(2),'.r','markersize',40);
             plot(x_cvx(1),x_cvx(2),'.b','markersize',35);
-            pause(1)
+            pause(2)
             hold off;
         end
         if i == stage
-            plot(w_cvx);
+            stem(w_cvx);
         end
     end
 end
