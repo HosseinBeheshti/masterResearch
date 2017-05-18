@@ -1,7 +1,7 @@
-function x_adpt = AdptOneBitCS(x_org,n,s,m,Rmax,blk_s,plot_adpt)
+function x_adpt = AdptOneBitCS(x_org,n,s,m,L_inf,blk_s,plot_adpt)
 stage       = ceil(m/blk_s);
 A_var       = 1;
-Phi_var     = sqrt(Rmax).*ones(stage,1);
+Phi_var     = ones(stage,1);
 w_cvx       = zeros(1,stage);
 A           = zeros(blk_s,n,stage);
 Phi         = zeros(n,blk_s,stage);
@@ -27,7 +27,7 @@ for i = 1:stage
     for k = 1:i
         y(:,:,k).*(A(:,:,k)*x_cvx-tau(:,:,k)) >= 0;
     end
-    norm(x_cvx)     <= Rmax;
+    norm(x_cvx,inf)     <= L_inf;
     cvx_end
     
     % Computing Gaussian width
@@ -39,7 +39,7 @@ for i = 1:stage
     for k = 1:i
         y(:,:,k).*(A(:,:,k)*z_cvx-tau(:,:,k)) >= 0;
     end
-    norm(z_cvx)     <= Rmax;
+    norm(z_cvx,inf)     <= L_inf;
     cvx_end
     
     w_cvx(i)    = norm(z_cvx-x_cvx);
@@ -59,10 +59,11 @@ for i = 1:stage
             figure(1);
             hold on;
             % norm constraint
-            ang=0:0.01:2*pi;
-            cx1 = Rmax*cos(ang);
-            cx2 = Rmax*sin(ang);
-            plot(cx1,cx2);
+            sp  = [-L_inf:0.1:L_inf];
+            plot(L_inf*ones(length(sp)),sp,'.b','markersize',20);
+            plot(-L_inf*ones(length(sp)),sp,'.b','markersize',20);
+            plot(sp,L_inf*ones(length(sp)),'.b','markersize',20);
+            plot(sp,-L_inf*ones(length(sp)),'.b','markersize',20);
             plot(x_org(1),x_org(2),'.r','markersize',40);
             nrm_inf = norm(x_org,inf);
             t1 = -4*nrm_inf:0.1:4*nrm_inf;
