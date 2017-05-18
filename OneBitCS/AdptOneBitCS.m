@@ -29,6 +29,17 @@ for i = 1:stage
     end
     norm(x_cvx,inf)     <= L_inf;
     cvx_end
+
+	% Computing Analytic center
+    cvx_begin quiet;
+    variable c_cvx(n);
+    maximize -sum();
+    subject to
+    for k = 1:i
+        y(:,:,k).*(A(:,:,k)*c_cvx-tau(:,:,k)) >= 0;
+    end
+    norm(c_cvx,inf)     <= L_inf;
+    cvx_end
     
     % Computing Gaussian width
     g = x_cvx'./norm(x_cvx);
@@ -60,10 +71,10 @@ for i = 1:stage
             hold on;
             % norm constraint
             sp  = -L_inf:(L_inf/100):L_inf;
-            plot(L_inf*ones(length(sp)),sp,'.b','markersize',8);
-            plot(-L_inf*ones(length(sp)),sp,'.b','markersize',8);
-            plot(sp,L_inf*ones(length(sp)),'.b','markersize',8);
-            plot(sp,-L_inf*ones(length(sp)),'.b','markersize',8);
+            plot(L_inf*ones(length(sp)),sp,'.b','markersize',5);
+            plot(-L_inf*ones(length(sp)),sp,'.b','markersize',5);
+            plot(sp,L_inf*ones(length(sp)),'.b','markersize',5);
+            plot(sp,-L_inf*ones(length(sp)),'.b','markersize',5);
             plot(x_org(1),x_org(2),'.r','markersize',40);
             t1 = -4*L_inf:(L_inf/100):4*L_inf;
             for k = i:i
