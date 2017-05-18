@@ -10,7 +10,7 @@ plot_adpt           = 1;
 %%
 dtr_x               = 0;
 %% signal parameter
-n                   = 20; % signal dimension
+n                   = 2; % signal dimension
 s                   = 2; % sparsity
 % number of measurment
 m_temp           	= 120;
@@ -18,9 +18,9 @@ m_temp           	= 120;
 
 blk_s   = 30;
 
-Rmax    = 9; % upper bound for ||x||
-Rmin    = 5; % lower bound for ||x||
-L_inf   = 9; % upper bound of ||x||_{\inf}
+Rmax    = 20; % upper bound for ||x||
+Rmin    = 10; % lower bound for ||x||
+L_inf   = Rmax; % upper bound of ||x||_{\inf}
 
 tau     = Rmin;% Threshold parameter: an alternative is
 tau2    = Rmin/2+Rmax/2; %(works better with convex minimizaiton);

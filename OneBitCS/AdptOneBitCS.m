@@ -59,20 +59,19 @@ for i = 1:stage
             figure(1);
             hold on;
             % norm constraint
-            sp  = [-L_inf:0.1:L_inf];
-            plot(L_inf*ones(length(sp)),sp,'.b','markersize',20);
-            plot(-L_inf*ones(length(sp)),sp,'.b','markersize',20);
-            plot(sp,L_inf*ones(length(sp)),'.b','markersize',20);
-            plot(sp,-L_inf*ones(length(sp)),'.b','markersize',20);
+            sp  = -L_inf:(L_inf/100):L_inf;
+            plot(L_inf*ones(length(sp)),sp,'.b','markersize',8);
+            plot(-L_inf*ones(length(sp)),sp,'.b','markersize',8);
+            plot(sp,L_inf*ones(length(sp)),'.b','markersize',8);
+            plot(sp,-L_inf*ones(length(sp)),'.b','markersize',8);
             plot(x_org(1),x_org(2),'.r','markersize',40);
-            nrm_inf = norm(x_org,inf);
-            t1 = -4*nrm_inf:0.1:4*nrm_inf;
+            t1 = -4*L_inf:(L_inf/100):4*L_inf;
             for k = i:i
                 for j =1:blk_s
                     t2 = -((A(j,1,k)/A(j,2,k))*(t1-Phi(1,j,k)))+Phi(2,j,k);
                     plot(t1,t2);
-                    xlim([-2*nrm_inf 2*nrm_inf]);
-                    ylim([-2*nrm_inf 2*nrm_inf]);
+                    xlim([-L_inf L_inf]);
+                    ylim([-L_inf L_inf]);
                 end
             end
             % x and xhat
@@ -82,6 +81,7 @@ for i = 1:stage
             hold off;
         end
         if i == stage
+            figure(2);
             stem(w_cvx);
         end
     end
