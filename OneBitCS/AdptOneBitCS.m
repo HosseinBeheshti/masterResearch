@@ -19,7 +19,7 @@ for i = 1:stage
         tau(j,:,i)  = A(j,:,i)*Phi(:,j,i);
     end
     %% recovery procedure
-    % cvx
+    % compute optimal solution
     cvx_begin quiet;
     variable x_cvx(n);
     minimize(norm(x_cvx,1));
@@ -33,10 +33,10 @@ for i = 1:stage
 	% Computing Analytic center
     cvx_begin quiet;
     variable c_cvx(n);
-    maximize -sum();
+    minimize -sum(log(y(:,:,i).*(tau(:,:,i)-A(:,:,i)*c_cvx)));
     subject to
-    for k = 1:i
-        y(:,:,k).*(A(:,:,k)*c_cvx-tau(:,:,k)) >= 0;
+    for k = i:i
+        y(:,:,k).*(tau(:,:,k)-A(:,:,k)*c_cvx) <= 0;
     end
     norm(c_cvx,inf)     <= L_inf;
     cvx_end
@@ -86,9 +86,9 @@ for i = 1:stage
                 end
             end
             % x and xhat
-            plot(x_org(1),x_org(2),'.r','markersize',40);
+            plot(c_cvx(1),c_cvx(2),'.g','markersize',40);
             plot(x_cvx(1),x_cvx(2),'.b','markersize',35);
-            pause(2)
+            pause(5)
             hold off;
         end
         if i == stage
