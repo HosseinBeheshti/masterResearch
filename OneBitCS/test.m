@@ -7,20 +7,27 @@ n = 2;
 m = 4;
 
 %Random vector b
-b = [0;1;0;1];
+
 
 %Random array A
-A = [1,0;1,0;0,1;0,1];
 
-%% CVX optimization
-cvx_begin
-variable x(n)
-minimize(- sum(log(A*x-b)))
-subject to      %Initially without this line
-A*x-b >= 0 %Initially without this line
-cvx_end
-%%
+
+%% optimization
 L_inf = 10;
+%%
+func = @log_barrier;
+x0 = [1,1]';
+A = [1,eps;1,eps;eps,1;eps,1];
+b = [1;2;1;2];
+Aeq = [];
+beq = [];
+lb = [];
+ub = [];
+x = fmincon(func,x0,A,b,Aeq,beq,lb,ub);
+
+
+%%
+
 t1 = -4*L_inf:(L_inf/100):4*L_inf;
 close all;
 figure(1)
@@ -31,6 +38,7 @@ for j =1:m
     xlim([-L_inf L_inf]);
     ylim([-L_inf L_inf]);
 end
+plot(x(1),x(2),'.g','markersize',40);
 hold off;
 
 
