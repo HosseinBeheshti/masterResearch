@@ -1,38 +1,43 @@
-% Boyd & Vandenberghe "Convex Optimization"
-% Joëlle Skaf - 04/29/08
-%
-% The analytic center of a set of linear inequalities and equalities:
-%           a_i^Tx <= b_i   i=1,...,m,
-%           Fx = g,
-% is the solution of the unconstrained minimization problem
-%           minimize    -sum_{i=1}^m log(b_i-a_i^Tx).
 
-% Input data
+%% signal parameter
+n                   = 2; % signal dimension
+s                   = 2; % sparsity
+% number of measurment
+m_temp           	= 120;
+
+Rmax    = 2; % upper bound for ||x||
+Rmin    = 1; % lower bound for ||x||
+L_inf   = 10; % upper bound of ||x||_{\inf}
+A_var       = 1;
 n = 2;
-m = 4;
-L_inf = 10;
+m = 10;
 
-A = [-1,eps;1,eps;eps,-1;eps,1];
-b = [1;2;1;2];
+[x_org,~]  = signal_generator(n, s, 0, Rmin, Rmax);
+
+A       = normrnd(0,1,m,n);
+tau     = 5*normrnd(0,1,m,1);
+yp      = A*x_org-tau;
+y       = theta(yp);
+
+
 % Analytic center
 cvx_begin
-    variable x(n)
-    minimize -sum(log(b-A*x))
+variable x(n)
+minimize -sum(log(y.*(A*x-tau)));
 cvx_end
 
-disp(['The analytic center of the set of linear inequalities and ' ...
-      'equalities is: ']);
 disp(x);
 %%
-t1 = -4*L_inf:(L_inf/100):4*L_inf;
+t1 = -5*L_inf:(L_inf/100):5*L_inf;
 close all;
 figure(1)
 hold on;
 for j =1:m
-    t2 = -(A(j,1)/A(j,2))*t1+(b(j)/A(j,2));
+    t2 = -(A(j,1)/A(j,2))*t1+(tau(j)/A(j,2));
     plot(t1,t2);
     xlim([-L_inf L_inf]);
     ylim([-L_inf L_inf]);
 end
+plot(x_org(1),x_org(2),'.r','markersize',40);
 plot(x(1),x(2),'.g','markersize',40);
 hold off;
