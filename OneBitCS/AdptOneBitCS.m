@@ -1,7 +1,7 @@
 function x_adpt = AdptOneBitCS(x_org,n,s,m,L_inf,blk_s,plot_adpt)
 stage       = ceil(m/blk_s);
 A_var       = 1;
-Phi_var     = ones(stage,1);
+Phi_var     = 5*ones(stage,1);
 w_cvx       = zeros(1,stage);
 A           = zeros(blk_s,n,stage);
 Phi         = zeros(n,blk_s,stage);
@@ -29,38 +29,38 @@ for i = 1:stage
     end
     norm(x_cvx,inf)     <= L_inf;
     cvx_end
-
-	% Computing Analytic center
+    
+    % Computing Analytic center
     cvx_begin quiet;
-    variable c_cvx(n);
-    minimize -sum(log(y(:,:,i).*(tau(:,:,i)-A(:,:,i)*c_cvx)));
-    subject to
-    for k = i:i
-        y(:,:,k).*(tau(:,:,k)-A(:,:,k)*c_cvx) <= 0;
-    end
-    norm(c_cvx,inf)     <= L_inf;
+    variable x_ac(n);
+    minimize -sum(log(y(:,:,i).*(A(:,:,i)*x_ac-tau(:,:,i))));
     cvx_end
     
     % Computing Gaussian width
-    g = x_cvx'./norm(x_cvx);
+    g = normrnd(0,1,1,n);
     cvx_begin quiet;
-    variable z_cvx(n);
-    maximize g*z_cvx;
+    variable w_temp(n);
+    maximize g*w_temp;
     subject to
     for k = 1:i
-        y(:,:,k).*(A(:,:,k)*z_cvx-tau(:,:,k)) >= 0;
+        y(:,:,k).*(A(:,:,k)*(w_temp-x_cvx)-tau(:,:,k)) >= 0;
     end
-    norm(z_cvx,inf)     <= L_inf;
+    norm(w_temp,inf)     <= L_inf;
     cvx_end
     
-    w_cvx(i)    = norm(z_cvx-x_cvx);
+    w_cvx(i)    = abs(g*w_temp)./norm(g);
     
     % set parameter
     if i==stage(end)
         x_adpt          = x_cvx;
     else
-        ofset(:,i+1)   	= (z_cvx+x_cvx)/2;
-        Phi_var(i+1)    = sqrt(w_cvx(i));
+        if ~isnan(x_ac)
+            ofset(:,i+1)   	= x_cvx;
+            Phi_var(i+1)    = Phi_var(i);
+        else
+            ofset(:,i+1)   	= x_ac;
+            Phi_var(i+1)    = sqrt(w_cvx(i));
+        end
     end
     
     %% visiual adaptivity
@@ -86,9 +86,9 @@ for i = 1:stage
                 end
             end
             % x and xhat
-            plot(c_cvx(1),c_cvx(2),'.g','markersize',40);
+            plot(x_ac(1),x_ac(2),'.g','markersize',40);
             plot(x_cvx(1),x_cvx(2),'.b','markersize',35);
-            pause(5)
+            pause(1)
             hold off;
         end
         if i == stage
