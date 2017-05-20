@@ -7,21 +7,23 @@ n = 2;
 m = 4;
 
 %Random vector b
-b = [1;1;2;2];
+b = [0;1;0;1];
 
 %Random array A
-A = [1,0;0,1;1,0;0,1];
+A = [1,0;1,0;0,1;0,1];
 
-%CVX optimization
+%% CVX optimization
 cvx_begin
 variable x(n)
-minimize(- sum(log(b - A*x)))
+minimize(- sum(log(A*x-b)))
 subject to      %Initially without this line
-b - A*x > 0 %Initially without this line
+A*x-b >= 0 %Initially without this line
 cvx_end
 %%
-L_inf = 100;
+L_inf = 10;
 t1 = -4*L_inf:(L_inf/100):4*L_inf;
+close all;
+figure(1)
 hold on;
 for j =1:m
     t2 = -(A(j,1)/A(j,2))*t1+(b(j)/A(j,2));
