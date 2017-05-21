@@ -34,8 +34,6 @@ for i = 1:stage
     cvx_begin quiet;
     variable x_ac(n);
     minimize -sum(log(y(:,:,i).*(A(:,:,i)*x_ac-tau(:,:,i))));
-    subject to
-    norm(x_ac,inf)     <= L_inf;
     cvx_end
     
     % Computing Gaussian width
