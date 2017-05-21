@@ -13,10 +13,10 @@ dtr_x               = 0;
 n                   = 2; % signal dimension
 s                   = 2; % sparsity
 % number of measurment
-m_temp           	= 120;
+m_temp           	= 50;
 % m_temp              = ceil(s*log(n/s));
 
-blk_s   = 30;
+blk_s   = 10;
 
 Rmax    = 20; % upper bound for ||x||
 Rmin    = 10; % lower bound for ||x||
@@ -64,7 +64,7 @@ for i=1:itr_m
     % Gbiht_err       = r_err_c(x_Gbiht,x_org);
     % Apv_err         = r_err_c(x_Apv,x_org);
     PV_err          = r_err_c(xsharpPV,x_org);
-%     Alt_err         = r_err_c(xsharpAlt,x_org);
+    Alt_err         = r_err_c(xsharpAlt,x_org);
     adpt_err        = r_err_c(x_AdptOneBitCS,x_org);
     
     
@@ -72,7 +72,7 @@ for i=1:itr_m
     % avg_Gbiht_err(i)  = sum(Gbiht_err)./size(Gbiht_err,2);
     % avg_Apv_err(i)    = sum(Apv_err)./size(Apv_err,2);
     avg_PV_err(i)   = sum(PV_err)./size(PV_err,2);
-%     avg_Alt_err(i)  = sum(Alt_err)./size(Alt_err,2);
+    avg_Alt_err(i)  = sum(Alt_err)./size(Alt_err,2);
     avg_adpt_err(i) = sum(adpt_err)./size(adpt_err,2);
 end
 %%
@@ -81,7 +81,7 @@ end
 % disp(['avg_Gbiht_err = ',num2str(avg_Gbiht_err)])
 % disp(['avg_Apv_err = ',num2str(avg_Apv_err)])
 disp(['avg_PV_err = ',num2str(avg_PV_err)])
-% disp(['avg_Alt_err = ',num2str(avg_Alt_err)])
+disp(['avg_Alt_err = ',num2str(avg_Alt_err)])
 disp(['avg_adpt_err = ',num2str(avg_adpt_err)])
 disp(m)
 %%
