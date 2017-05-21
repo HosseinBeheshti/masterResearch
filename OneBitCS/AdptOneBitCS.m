@@ -34,21 +34,34 @@ for i = 1:stage
     cvx_begin quiet;
     variable x_ac(n);
     minimize -sum(log(y(:,:,i).*(A(:,:,i)*x_ac-tau(:,:,i))));
+    subject to
+    norm(x_ac,inf) <= L_inf;
     cvx_end
     
     % Computing Gaussian width
     g = normrnd(0,1,1,n);
+    % sup
     cvx_begin quiet;
-    variable w_temp(n);
-    maximize g*w_temp;
+    variable w_s(n);
+    maximize g*w_s;
     subject to
     for k = 1:i
-        y(:,:,k).*(A(:,:,k)*(w_temp-x_cvx)-tau(:,:,k)) >= 0;
+        y(:,:,k).*(A(:,:,k)*w_s-tau(:,:,k)) >= 0;
     end
-    norm(w_temp,inf)     <= L_inf;
+    norm(w_s,inf)     <= L_inf;
+    cvx_end
+    % inf
+    cvx_begin quiet;
+    variable w_i(n);
+    maximize -g*w_i;
+    subject to
+    for k = 1:i
+        y(:,:,k).*(A(:,:,k)*w_i-tau(:,:,k)) >= 0;
+    end
+    norm(w_i,inf)     <= L_inf;
     cvx_end
     
-    w_cvx(i)    = abs(g*w_temp)./norm(g);
+    w_cvx(i)    = sum(sqrt((w_i-w_s).^2));
     
     % set parameter
     if i==stage(end)
@@ -56,9 +69,12 @@ for i = 1:stage
     else
         if ~isnan(x_ac)
             ofset(:,i+1)   	= x_cvx;
-            Phi_var(i+1)    = Phi_var(i);
         else
             ofset(:,i+1)   	= x_ac;
+        end
+        if ~isnan(w_cvx(i))
+            Phi_var(i+1)    = Phi_var(i);
+        else
             Phi_var(i+1)    = sqrt(w_cvx(i));
         end
     end
