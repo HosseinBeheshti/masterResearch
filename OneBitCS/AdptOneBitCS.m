@@ -31,11 +31,16 @@ for i = 1:stage
     cvx_end
     
     % Computing Analytic center
+
+    for k = 1:i
+        A_ac = 
+        y(:,:,k).*(A(:,:,k)*w_s-tau(:,:,k)) >= 0;
+    end
+        Ap =
     cvx_begin quiet;
     variable x_ac(n);
     minimize -sum(log(y(:,:,i).*(A(:,:,i)*x_ac-tau(:,:,i))));
     subject to
-    norm(x_ac,inf) <= L_inf;
     cvx_end
     
     % Computing Gaussian width
@@ -68,14 +73,15 @@ for i = 1:stage
         x_adpt          = x_cvx;
     else
         if ~isnan(x_ac)
-            ofset(:,i+1)   	= x_cvx;
-        else
             ofset(:,i+1)   	= x_ac;
+        else
+            
+            ofset(:,i+1)   	= x_cvx;
         end
         if ~isnan(w_cvx(i))
-            Phi_var(i+1)    = Phi_var(i);
+            Phi_var(i+1)    = nthroot((w_cvx(i)^2/blk_s),6);
         else
-            Phi_var(i+1)    = sqrt(w_cvx(i));
+            Phi_var(i+1)    = Phi_var(i);
         end
     end
     
