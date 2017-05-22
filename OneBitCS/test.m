@@ -12,9 +12,11 @@ ply_ofst = -y(:,:,i).*tau(:,:,i);
 % Computing Chebyshev center
 cvx_begin quiet;
 variable r(1)
-variable x_c(2)
+variable x_c(n)
 maximize (r)
-ply_nrml*x_c +r*norm(ply_nrml',2) <= ply_ofst;
+for k = 1:blk_s
+ply_nrml(k,:)*x_c +r*norm(ply_nrml(k,:)',2) <= ply_ofst(k);
+end
 cvx_end
 %%
 close all;
