@@ -31,14 +31,18 @@ for i = 1:stage
     cvx_end
     
     % Computing Chebyshev center
+    ply_nrml = -y(:,:,i).*A(:,:,i);
+    ply_ofst = -y(:,:,i).*tau(:,:,i);
+    
     cvx_begin quiet;
-    variable r(1)
-    variable x_c(2)
-    maximize ( r )
+    variable r_c(1)
+    variable x_c(n)
+    maximize ( r_c )
     subject to
-    for k=1:blk_s
-        (-y(k,:,i).*A(k,:,i))*x_c +r*norm(-y(k,:,i).*A(k,:,i),2) <= -y(k,:,i).*tau(k,:,i);
+    for k = 1:blk_s
+        ply_nrml(k,:)*x_c +r_c*norm(ply_nrml(k,:)',2) <= ply_ofst(k);
     end
+    norm(x_c,inf)     <= L_inf;
     cvx_end
     
     % Computing Gaussian width
@@ -107,6 +111,8 @@ for i = 1:stage
             end
             % x and xhat
             plot(x_c(1),x_c(2),'.g','markersize',40);
+            CTheta = 0:pi/100:2*pi;
+            plot( x_c(1) + r_c*cos(CTheta), x_c(2) + r_c*sin(CTheta), 'r');
             plot(x_cvx(1),x_cvx(2),'.b','markersize',35);
             pause(1)
             hold off;

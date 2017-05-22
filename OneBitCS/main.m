@@ -16,7 +16,7 @@ s                   = 2; % sparsity
 m_temp           	= 50;
 % m_temp              = ceil(s*log(n/s));
 
-blk_s   = 10;
+blk_s   = 20;
 
 Rmax    = 10; % upper bound for ||x||
 Rmin    = 1; % lower bound for ||x||
