@@ -30,10 +30,15 @@ for i = 1:stage
     norm(x_cvx,inf)     <= L_inf;
     cvx_end
     
-    % Computing Analytic center
+    % Computing Chebyshev center
     cvx_begin quiet;
-    variable x_ac(n);
-    minimize -sum(log(y(:,:,i).*(A(:,:,i)*x_ac-tau(:,:,i))));
+    variable r(1)
+    variable x_c(2)
+    maximize ( r )
+    subject to
+    for k=1:blk_s
+        (-y(k,:,i).*A(k,:,i))*x_c +r*norm(-y(k,:,i).*A(k,:,i),2) <= -y(k,:,i).*tau(k,:,i);
+    end
     cvx_end
     
     % Computing Gaussian width
@@ -65,8 +70,8 @@ for i = 1:stage
     if i==stage(end)
         x_adpt          = x_cvx;
     else
-        if ~isnan(x_ac)
-            ofset(:,i+1)   	= x_ac;
+        if ~isnan(x_c)
+            ofset(:,i+1)   	= x_c;
         else
             
             ofset(:,i+1)   	= x_cvx;
@@ -92,7 +97,7 @@ for i = 1:stage
             plot(sp,-L_inf*ones(length(sp)),'.b','markersize',5);
             plot(x_org(1),x_org(2),'.r','markersize',40);
             t1 = -4*L_inf:(L_inf/100):4*L_inf;
-            for k = i:i
+            for k = 1:i
                 for j =1:blk_s
                     t2 = -((A(j,1,k)/A(j,2,k))*(t1-Phi(1,j,k)))+Phi(2,j,k);
                     plot(t1,t2);
@@ -101,7 +106,7 @@ for i = 1:stage
                 end
             end
             % x and xhat
-            plot(x_ac(1),x_ac(2),'.g','markersize',40);
+            plot(x_c(1),x_c(2),'.g','markersize',40);
             plot(x_cvx(1),x_cvx(2),'.b','markersize',35);
             pause(1)
             hold off;
