@@ -7,17 +7,22 @@
 % fashion: P = {x : a_i'*x <= b_i, i=1,...,m} where x is in R^2
 
 load log;
-for st = 1:i
-ply_nrml() = -y(:,:,i).*A(:,:,i);
-ply_ofst() = -y(:,:,i).*tau(:,:,i);
-end
+    ply_nrml = [];
+    ply_ofst = [];
+    for st = 1:i
+        ply_nrml_tmp    = (-y(:,:,st).*A(:,:,st));
+        ply_nrml        = [ply_nrml ply_nrml_tmp'];
+        ply_ofst_tmp    = -y(:,:,i).*tau(:,:,i);
+        ply_ofst        = [ ply_ofst  ply_ofst_tmp'];
+    end
+% end
 % Computing Chebyshev center
 cvx_begin quiet;
 variable r(1)
 variable x_c(n)
 maximize (r)
 for k = 1:blk_s
-ply_nrml(k,:)*x_c +r*norm(ply_nrml(k,:)',2) <= ply_ofst(k);
+ply_nrml(:,k)'*x_c +r*norm(ply_nrml(:,k),2) <= ply_ofst(k)';
 end
 cvx_end
 %%

@@ -18,6 +18,7 @@ for i = 1:stage
         y(j,:,i)    = theta(yp(j,:,i));
         tau(j,:,i)  = A(j,:,i)*Phi(:,j,i);
     end
+
     %% recovery procedure
     % compute optimal solution
     cvx_begin quiet;
@@ -31,16 +32,21 @@ for i = 1:stage
     cvx_end
     
     % Computing Chebyshev center
-    ply_nrml = -y(:,:,i).*A(:,:,i);
-    ply_ofst = -y(:,:,i).*tau(:,:,i);
-    
+    ply_nrml = [];
+    ply_ofst = [];
+    for st = 1:i
+        ply_nrml_tmp    = (-y(:,:,st).*A(:,:,st));
+        ply_nrml        = [ply_nrml ply_nrml_tmp'];
+        ply_ofst_tmp    = -y(:,:,i).*tau(:,:,i);
+        ply_ofst        = [ ply_ofst  ply_ofst_tmp'];
+    end
     cvx_begin quiet;
     variable r_c(1)
     variable x_c(n)
     maximize ( r_c )
     subject to
-    for k = 1:blk_s
-        ply_nrml(k,:)*x_c +r_c*norm(ply_nrml(k,:)',2) <= ply_ofst(k);
+    for k = 1:i*blk_s
+        ply_nrml(k,:)'*x_c +r_c*norm(ply_nrml(k,:),2) <= ply_ofst(k)';
     end
     norm(x_c,inf)     <= L_inf;
     cvx_end
