@@ -3,11 +3,17 @@ stage       = ceil(m/blk_s);
 A_var       = 1;
 Phi_var     = 5*ones(stage,1);
 w_cvx       = zeros(1,stage);
-A           = [];
-Phi         = [];
-tau         = [];
-y           = [];
 ofset       = zeros(n,stage);
+% l_{\inf} polyhedron
+ATemp   = kron(eye(n),ones(2,1));
+PhiTemp = L_inf.*kron(eye(n),[1; -1])';
+tauTemp = sum(ATemp'.*PhiTemp)';
+yTemp   = tauTemp;
+
+A           = ATemp;
+Phi         = PhiTemp;
+tau         = tauTemp;
+y           = -yTemp;
 
 for i = 1:stage
     %% measure procedure
@@ -18,35 +24,52 @@ for i = 1:stage
     tau_temp    = sum(A_temp'.*Phi_temp)';
     %% recovery procedure
     % polyhedron normal and ofset
-    A   = [A ; A_temp];
-    y   = [y ; y_temp];
-    Phi = [Phi Phi_temp];
-    tau = [tau ; tau_temp];
-
+    A           = [A ; A_temp];
+    y           = [y ; y_temp];
+    Phi         = [Phi Phi_temp];
+    tau         = [tau ; tau_temp];
+    ply_nrml    = -y.*A;
+    ply_ofst    = -y.*tau;
+    
     % compute optimal solution
     cvx_begin quiet;
     variable x_opt(n);
     minimize(norm(x_opt,1));
     subject to
-    y.*(A*x_opt-tau)    >= 0;
-    norm(x_opt,inf)     <= L_inf;
+    ply_nrml*x_opt  <= ply_ofst;
     cvx_end
     
-    % Computing Chebyshev center
-    ply_nrml = -y.*A;
-    ply_ofst = -y.*tau;
-
+    % Computing Analytic center
     cvx_begin quiet;
-    variable r_c(1)
-    variable x_c(n)
-    maximize ( r_c )
-    subject to
-    for k = 1:length(y)
-        ply_nrml(k,:)*x_c +r_c*norm(ply_nrml(k,:)',2) <= ply_ofst(k);
-    end
+    variable x_ac(n);
+    minimize -sum(log(ply_ofst-ply_nrml*x_ac));
     cvx_end
+    
+    % Computing Gaussian width
+    g = normrnd(0,1,1,n);
+    % sup
+    cvx_begin quiet;
+    variable w_s(n);
+    maximize g*w_s;
+    subject to
+    for k = 1:i
+        y(:,:,k).*(A(:,:,k)*w_s-tau(:,:,k)) >= 0;
+    end
+    norm(w_s,inf)     <= L_inf;
+    cvx_end
+    % inf
+    cvx_begin quiet;
+    variable w_i(n);
+    maximize -g*w_i;
+    subject to
+    for k = 1:i
+        y(:,:,k).*(A(:,:,k)*w_i-tau(:,:,k)) >= 0;
+    end
+    norm(w_i,inf)     <= L_inf;
+    cvx_end
+    
+    w_cvx(i)    = sum(sqrt((w_i-w_s).^2));
 
-    w_cvx(i)    = r_c;
     % set parameter
     if i==stage(end)
         x_adpt          = x_opt;
@@ -62,7 +85,7 @@ for i = 1:stage
             ofset(:,i+1)   	= x_opt;
         end
         if ~isnan(w_cvx(i))
-            Phi_var(i+1)    =  sqrt(w_cvx(i));
+            Phi_var(i+1)    =  sqrt(abs(w_cvx(i)));
         else
             Phi_var(i+1)    = Phi_var(i);
         end
@@ -101,5 +124,6 @@ for i = 1:stage
             stem(w_cvx);
         end
     end
+    save log;
 end
 end
