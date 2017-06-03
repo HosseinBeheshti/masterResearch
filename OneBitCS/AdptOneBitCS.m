@@ -24,42 +24,54 @@ for i = 1:stage
     tau_temp    = sum(A_temp'.*Phi_temp)';
     %% recovery procedure
     % polyhedron normal and ofset
-    A   = [A ; A_temp];
-    y   = [y ; y_temp];
-    Phi = [Phi Phi_temp];
-    tau = [tau ; tau_temp];
+    A           = [A ; A_temp];
+    y           = [y ; y_temp];
+    Phi         = [Phi Phi_temp];
+    tau         = [tau ; tau_temp];
+    ply_nrml    = -y.*A;
+    ply_ofst    = -y.*tau;
 
     % compute optimal solution
     cvx_begin quiet;
     variable x_opt(n);
     minimize(norm(x_opt,1));
     subject to
-    y.*(A*x_opt-tau)    >= 0;
-    norm(x_opt,inf)     <= L_inf;
+    ply_nrml*x_opt  <= ply_ofst;
     cvx_end
     
-    % Computing Chebyshev center
-    ply_nrml = -y.*A;
-    ply_ofst = -y.*tau;
-
+    % Computing Analytic center
     cvx_begin quiet;
-    variable r_c(1)
-    variable x_c(n)
-    maximize ( r_c )
-    subject to
-    for k = 1:length(y)
-        ply_nrml(k,:)*x_c +r_c*norm(ply_nrml(k,:)',2) <= ply_ofst(k);
-    end
+    variable x_ac(n);
+    minimize -sum(log(ply_ofst-ply_nrml*x_ac));
     cvx_end
+    
+    % Computing Gaussian width
+    g = normrnd(0,1,1,n);
+    % sup
+    cvx_begin quiet;
+    variable w_s(n);
+    maximize g*w_s;
+    subject to
+    ply_nrml*w_s  <= ply_ofst;
+    cvx_end
+    % inf
+    cvx_begin quiet;
+    variable w_i(n);
+    maximize -g*w_i;
+    subject to
+    ply_nrml*w_i  <= ply_ofst;
+    cvx_end
+    
+    w_cvx(i)    = sum(sqrt((w_i-w_s).^2));
 
-    w_cvx(i)    = r_c;
+    % set parameter
     % set parameter
     if i==stage(end)
         x_adpt          = x_opt;
     else
-        if ~isnan(x_c)
-            if norm(x_c,inf) < L_inf
-                ofset(:,i+1)   	= x_c;
+        if ~isnan(x_ac)
+            if norm(x_ac,inf) < L_inf
+                ofset(:,i+1)   	= x_ac;
             else
                 ofset(:,i+1)   	= x_opt;
             end
@@ -95,9 +107,7 @@ for i = 1:stage
                     ylim([-L_inf L_inf]);
             end
             % x and xhat
-            plot(x_c(1),x_c(2),'.g','markersize',40);
-            CTheta = 0:pi/100:2*pi;
-            plot( x_c(1) + r_c*cos(CTheta), x_c(2) + r_c*sin(CTheta), 'r');
+            plot(x_ac(1),x_ac(2),'.g','markersize',40);
             plot(x_opt(1),x_opt(2),'.b','markersize',35);
             pause(1)
             hold off;
