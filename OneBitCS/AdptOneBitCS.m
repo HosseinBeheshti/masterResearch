@@ -30,7 +30,7 @@ for i = 1:stage
     tau         = [tau ; tau_temp];
     ply_nrml    = -y.*A;
     ply_ofst    = -y.*tau;
-
+    
     % compute optimal solution
     cvx_begin quiet;
     variable x_opt(n);
@@ -39,52 +39,28 @@ for i = 1:stage
     ply_nrml*x_opt  <= ply_ofst;
     cvx_end
     
-    % Computing Analytic center
+    % Maximum volume inscribed ellipsoid in a polyhedron
     cvx_begin quiet;
-    variable x_ac(n);
-    minimize -sum(log(ply_ofst-ply_nrml*x_ac));
-    cvx_end
-    
-    % Computing Gaussian width
-    g = normrnd(0,1,1,n);
-    % sup
-    cvx_begin quiet;
-    variable w_s(n);
-    maximize g*w_s;
+    variable B_mve(n,n) symmetric
+    variable d_mve(n)
+    maximize( det_rootn( B_mve ) )
     subject to
-    ply_nrml*w_s  <= ply_ofst;
-    cvx_end
-    % inf
-    cvx_begin quiet;
-    variable w_i(n);
-    maximize -g*w_i;
-    subject to
-    ply_nrml*w_i  <= ply_ofst;
-    cvx_end
-    
-    w_cvx(i)    = sum(sqrt((w_i-w_s).^2));
-
-    % set parameter
-    % set parameter
-    if i==stage(end)
-        x_adpt          = x_opt;
-    else
-        if ~isnan(x_ac)
-            if norm(x_ac,inf) < L_inf
-                ofset(:,i+1)   	= x_ac;
-            else
-                ofset(:,i+1)   	= x_opt;
-            end
-        else
-            
-            ofset(:,i+1)   	= x_opt;
-        end
-        if ~isnan(w_cvx(i))
-            Phi_var(i+1)    =  sqrt(abs(w_cvx(i)));
-        else
-            Phi_var(i+1)    = Phi_var(i);
-        end
+    for i = 1:length(ply_ofst)
+        norm( B_mve*ply_nrml(i,:)', 2 ) + ply_nrml(i,:)*d_mve <= ply_ofst(i);
     end
+    cvx_end
+    
+    w_cvx(i)        = sum(sqrt((w_i-w_s).^2));
+    ofset(:,i+1)   	= d_mve;
+    
+    x_adpt          = x_opt;
+    
+    if ~isnan(w_cvx(i))
+        Phi_var(i+1)    =  sqrt(abs(w_cvx(i)));
+    else
+        Phi_var(i+1)    = Phi_var(i);
+    end
+    
     
     %% visiual adaptivity
     if plot_adpt
@@ -101,22 +77,23 @@ for i = 1:stage
             plot(x_org(1),x_org(2),'.r','markersize',40);
             t1 = -4*L_inf:(L_inf/100):4*L_inf;
             for k = 1:length(y)
-                    t2 = -((A(k,1)/A(k,2))*(t1-Phi(1,k)))+Phi(2,k);
-                    plot(t1,t2);
-                    xlim([-L_inf L_inf]);
-                    ylim([-L_inf L_inf]);
+                t2 = -((A(k,1)/A(k,2))*(t1-Phi(1,k)))+Phi(2,k);
+                plot(t1,t2);
+                xlim([-L_inf L_inf]);
+                ylim([-L_inf L_inf]);
             end
-            % x and xhat
-            plot(x_ac(1),x_ac(2),'.g','markersize',40);
+            noangles = 200;
+            angles   = linspace( 0, 2 * pi, noangles );
+            ellipse_inner  = B_mve * [ cos(angles) ; sin(angles) ] + d_mve * ones( 1, noangles );
+            plot(d_mve(1),d_mve(2),'.g','markersize',40);
             plot(x_opt(1),x_opt(2),'.b','markersize',35);
+            plot( ellipse_inner(1,:), ellipse_inner(2,:), 'r--' );
+            figure(2);
+            stem(w_cvx);
             pause(1)
             hold off;
         end
-        if i == stage
-            figure(2);
-            stem(w_cvx);
-        end
     end
-save log;
+    save log;
 end
 end
