@@ -49,8 +49,8 @@ for i = 1:stage
         norm( B_mve*ply_nrml(i,:)', 2 ) + ply_nrml(i,:)*d_mve <= ply_ofst(i);
     end
     cvx_end
-    
-    w_cvx(i)        = sum(sqrt((w_i-w_s).^2));
+    lambda_B = svd(B_mve);
+    w_cvx(i)        = norm(d_mve);
     ofset(:,i+1)   	= d_mve;
     
     x_adpt          = x_opt;

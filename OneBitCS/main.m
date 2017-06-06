@@ -10,13 +10,13 @@ plot_adpt           = 1;
 %%
 dtr_x               = 0;
 %% signal parameter
-n                   = 2; % signal dimension
-s                   = 2; % sparsity
+n                   = 200; % signal dimension
+s                   = 10; % sparsity
 % number of measurment
 m_temp           	= 120;
 % m_temp              = ceil(s*log(n/s));
 
-blk_s   = 30;
+blk_s   = 50;
 
 Rmax    = 10; % upper bound for ||x||
 Rmin    = 1; % lower bound for ||x||
