@@ -20,6 +20,10 @@ load log;
 A = ply_nrml;
 b = ply_ofst;
 
+
+[V,nr,nre]=lcon2vert(ply_nrml,ply_ofst);
+
+
 % formulate and solve the problem
 cvx_begin
 variable B_mve(n,n) symmetric
@@ -31,8 +35,8 @@ for i = 1:length(b)
 end
 cvx_end
 
-% make the plots
 
+lambda_B = svd(B_mve);
 
 % plot(px,py)
 close all;
@@ -55,7 +59,12 @@ end
 % x and xhat
 plot(d_mve(1),d_mve(2),'.g','markersize',40);
 plot(x_opt(1),x_opt(2),'.b','markersize',35);
+plot(V(1,1),V(1,2),'.g','markersize',40);
+plot(V(2,1),V(2,2),'.g','markersize',40);
+plot(V(3,1),V(3,2),'.g','markersize',40);
+plot(V(4,1),V(4,2),'.g','markersize',40);
+
+
 pause(1)
 plot( ellipse_inner(1,:), ellipse_inner(2,:), 'r--' );
-plot( ellipse_outer(1,:), ellipse_outer(2,:), 'r--' );
 hold off

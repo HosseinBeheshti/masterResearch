@@ -31,6 +31,8 @@ for i = 1:stage
     tau         = [tau ; tau_temp];
     ply_nrml    = -y.*A;
     ply_ofst    = -y.*tau;
+    [V,nr,nre]=lcon2vert(ply_nrml,ply_ofst);
+    disp('compute optimal solution')
     
     % compute optimal solution
     cvx_begin quiet;

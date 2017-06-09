@@ -10,7 +10,7 @@ plot_adpt           = 1;
 %%
 dtr_x               = 0;
 %% signal parameter
-n                   = 200; % signal dimension
+n                   = 100; % signal dimension
 s                   = 10; % sparsity
 % number of measurment
 m_temp           	= 120;
