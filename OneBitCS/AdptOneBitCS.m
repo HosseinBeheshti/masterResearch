@@ -22,6 +22,7 @@ for i = 1:stage
     yp_temp     = A_temp*x_org-sum(A_temp'.*Phi_temp)';
     y_temp      = theta(yp_temp);
     tau_temp    = sum(A_temp'.*Phi_temp)';
+    disp('measure procedure')
     %% recovery procedure
     % polyhedron normal and ofset
     A           = [A ; A_temp];
@@ -38,6 +39,7 @@ for i = 1:stage
     subject to
     ply_nrml*x_opt  <= ply_ofst;
     cvx_end
+    disp('compute optimal solution')
     
     % Maximum volume inscribed ellipsoid in a polyhedron
     cvx_begin quiet;
@@ -49,6 +51,8 @@ for i = 1:stage
         norm( B_mve*ply_nrml(i,:)', 2 ) + ply_nrml(i,:)*d_mve <= ply_ofst(i);
     end
     cvx_end
+    disp('compute inscribed ellipsoid')
+    
     lambda_B = svd(B_mve);
     w_cvx(i)        = norm(d_mve);
     ofset(:,i+1)   	= d_mve;
