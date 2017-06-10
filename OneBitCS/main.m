@@ -5,13 +5,13 @@ tic;
 %% monte carlo
 itr_avg     = 1;
 itr_m       = 1;
-%% plot control
-plot_adpt           = 1;
+%% display control
+disp_en           = 0;
 %%
 dtr_x               = 0;
 %% signal parameter
-n                   = 100; % signal dimension
-s                   = 10; % sparsity
+n                   = 10; % signal dimension
+s                   = 2; % sparsity
 % number of measurment
 m_temp           	= 120;
 % m_temp              = ceil(s*log(n/s));
@@ -44,6 +44,7 @@ avg_Alt_err     = zeros(1,itr_m);
 avg_adpt_err    = zeros(1,itr_m);
 
 for i=1:itr_m
+    disp(['iteration = ',num2str(itr_m)])
     m   = m_temp+10*(itr_m-1);
     for j=1:itr_avg
         %% signal generator
@@ -55,7 +56,7 @@ for i=1:itr_m
         %% convex optimization Apv
         % x_Apv(:,i)               = Apv(x_org,n,s,m);
         %% AdptOneBitCS algorithm 1
-        x_AdptOneBitCS(:,j)     = AdptOneBitCS(x_org(:,j),n,s,m,L_inf,blk_s,plot_adpt);
+        x_AdptOneBitCS(:,j)     = AdptOneBitCS(x_org(:,j),n,s,m,L_inf,blk_s,disp_en);
         %%
         [ xhatPV(:,j), xsharpPV(:,j), normxEstPV(j), xhatAlt(:,j), xsharpAlt(:,j), normxEstAlt(j), normxEstEDF(j) ] = KarinKnudson(x_org(:,j), n, s, m, tau, tau2);
     end
