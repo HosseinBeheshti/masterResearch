@@ -17,7 +17,7 @@ y           = -yTemp;
 
 for i = 1:stage
     if disp_en==1
-        disp(['stage = ',num2str(stage)])
+        disp(['stage = ',num2str(i)])
     end
     %% measure procedure
     A_temp      = normrnd(0,A_var,blk_s,n);
@@ -39,7 +39,7 @@ for i = 1:stage
     if disp_en==1
         [V,nr,nre]=lcon2vert(ply_nrml,ply_ofst);
         save log;
-        disp('compute optimal solution')
+        disp('compute V-polyhedron')
     end
     % compute optimal solution
     cvx_begin quiet;

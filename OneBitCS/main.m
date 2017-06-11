@@ -10,7 +10,7 @@ disp_en           = 1;
 %%
 dtr_x             = 0;
 %% signal parameter
-n                   = 3; % signal dimension
+n                   = 8; % signal dimension
 s                   = 2; % sparsity
 % number of measurment
 m_temp           	= 120;
