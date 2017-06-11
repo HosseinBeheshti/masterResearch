@@ -37,7 +37,9 @@ for i = 1:stage
     ply_nrml    = -y.*A;
     ply_ofst    = -y.*tau;
     if disp_en==1
+        cd('./polytopes');
         [V,nr,nre]=lcon2vert(ply_nrml,ply_ofst);
+        cd('../');
         save log;
         disp('compute V-polyhedron')
     end
