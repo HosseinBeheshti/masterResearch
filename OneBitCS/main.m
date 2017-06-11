@@ -6,11 +6,11 @@ tic;
 itr_avg     = 1;
 itr_m       = 1;
 %% display control
-disp_en           = 0;
+disp_en           = 1;
 %%
-dtr_x               = 0;
+dtr_x             = 0;
 %% signal parameter
-n                   = 10; % signal dimension
+n                   = 3; % signal dimension
 s                   = 2; % sparsity
 % number of measurment
 m_temp           	= 120;
