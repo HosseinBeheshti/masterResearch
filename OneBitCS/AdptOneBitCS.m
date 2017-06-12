@@ -59,8 +59,8 @@ for i = 1:stage
     variable d_mve(n)
     maximize( det_rootn( B_mve ) )
     subject to
-    for i = 1:length(ply_ofst)
-        norm( B_mve*ply_nrml(i,:)', 2 ) + ply_nrml(i,:)*d_mve <= ply_ofst(i);
+    for k = 1:length(ply_ofst)
+        norm( B_mve*ply_nrml(k,:)', 2 ) + ply_nrml(k,:)*d_mve <= ply_ofst(k);
     end
     cvx_end
     save log;
@@ -68,17 +68,13 @@ for i = 1:stage
         disp('compute inscribed ellipsoid')
     end
     lambda_B = svd(B_mve);
-    w_cvx(i)        = norm(d_mve);
+    
+    w_cvx(i)        = 2*lambda_B(end,:);
     ofset(:,i+1)   	= d_mve;
     
     x_adpt          = x_opt;
     
-    if ~isnan(w_cvx(i))
-        Phi_var(i+1)    =  sqrt(abs(w_cvx(i)));
-    else
-        Phi_var(i+1)    = Phi_var(i);
-    end
-    
+    Phi_var(i+1)    =  w_cvx(i);
     
     %% visiual adaptivity
     if disp_en
@@ -94,7 +90,7 @@ for i = 1:stage
             plot(sp,-L_inf*ones(length(sp)),'.b','markersize',5);
             plot(x_org(1),x_org(2),'.r','markersize',40);
             t1 = -4*L_inf:(L_inf/100):4*L_inf;
-            for k = 1:length(y)
+            for k = (length(y)-blk_s):length(y)
                 t2 = -((A(k,1)/A(k,2))*(t1-Phi(1,k)))+Phi(2,k);
                 plot(t1,t2);
                 xlim([-L_inf L_inf]);
