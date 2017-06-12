@@ -5,10 +5,10 @@ Phi_var     = 5*ones(stage,1);
 w_cvx       = zeros(1,stage);
 ofset       = zeros(n,stage);
 % l_{\inf} polyhedron
-ATemp   = kron(eye(n),ones(2,1));
-PhiTemp = L_inf.*kron(eye(n),[1; -1])';
-tauTemp = sum(ATemp'.*PhiTemp)';
-yTemp   = tauTemp;
+ATemp       = kron(eye(n),ones(2,1));
+PhiTemp     = L_inf.*kron(eye(n),[1; -1])';
+tauTemp     = sum(ATemp'.*PhiTemp)';
+yTemp       = tauTemp;
 
 A           = ATemp;
 Phi         = PhiTemp;
@@ -36,11 +36,28 @@ for i = 1:stage
     tau         = [tau ; tau_temp];
     ply_nrml    = -y.*A;
     ply_ofst    = -y.*tau;
+    cd('./polytopes');
+    [V,nr,nre]=lcon2vert(ply_nrml,ply_ofst);
+    cd('../');
+    save log;
+    % polyhedron reduction
+    A_temp       = A;
+    y_temp       = y;
+    Phi_temp     = Phi;
+    tau_temp     = tau;
+    
+    A       = zeros(length(nr),n);
+    y       = zeros(length(nr),1);
+    Phi     = zeros(n,length(nr));
+    tau     = zeros(length(nr),1);
+    
+    for k = 1:length(nr)
+        A(k,:)      = A_temp(nr(k),:);
+        y(k,:)      = y_temp(nr(k),:);
+        Phi(:,k)    = Phi_temp(:,nr(k));
+        tau(k,:)    = tau_temp(nr(k),:);
+    end
     if disp_en==1
-        cd('./polytopes');
-        [V,nr,nre]=lcon2vert(ply_nrml,ply_ofst);
-        cd('../');
-        save log;
         disp('compute V-polyhedron')
     end
     % compute optimal solution
@@ -90,7 +107,7 @@ for i = 1:stage
             plot(sp,-L_inf*ones(length(sp)),'.b','markersize',5);
             plot(x_org(1),x_org(2),'.r','markersize',40);
             t1 = -4*L_inf:(L_inf/100):4*L_inf;
-            for k = (length(y)-blk_s):length(y)
+            for k = 1:length(y)
                 t2 = -((A(k,1)/A(k,2))*(t1-Phi(1,k)))+Phi(2,k);
                 plot(t1,t2);
                 xlim([-L_inf L_inf]);
