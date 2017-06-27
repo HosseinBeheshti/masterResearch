@@ -1,9 +1,11 @@
 % polyhedron shape test and volume ratio
-clear;
-clc;
+%%
 close all;
-%%
-load log;
-%%
 
-vol = volume(V);
+Ply = Polyhedron(ply_nrml,ply_ofst);
+disp(volume(Ply));
+plot(Ply)
+%%
+Q = getFacet(Ply)
+c_center =  chebyCenter(Ply)
+VPly =  computeVRep(Ply)
