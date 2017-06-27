@@ -36,30 +36,11 @@ for i = 1:stage
     tau         = [tau ; tau_temp];
     ply_nrml    = -y.*A;
     ply_ofst    = -y.*tau;
-    cd('./polytopes');
-    [V,nr,nre]=lcon2vert(ply_nrml,ply_ofst);
-    cd('../');
-    save log;
-    % polyhedron reduction
-    A_temp       = A;
-    y_temp       = y;
-    Phi_temp     = Phi;
-    tau_temp     = tau;
-    
-    A       = zeros(length(nr),n);
-    y       = zeros(length(nr),1);
-    Phi     = zeros(n,length(nr));
-    tau     = zeros(length(nr),1);
-    
-    for k = 1:length(nr)
-        A(k,:)      = A_temp(nr(k),:);
-        y(k,:)      = y_temp(nr(k),:);
-        Phi(:,k)    = Phi_temp(:,nr(k));
-        tau(k,:)    = tau_temp(nr(k),:);
-    end
     if disp_en==1
-        disp('compute V-polyhedron')
+        current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
+        disp('compute MTP3 polyhedron')
     end
+    
     % compute optimal solution
     cvx_begin quiet;
     variable x_opt(n);
@@ -70,6 +51,7 @@ for i = 1:stage
     if disp_en==1
         disp('compute optimal solution')
     end
+
     % Maximum volume inscribed ellipsoid in a polyhedron
     cvx_begin quiet;
     variable B_mve(n,n) symmetric
@@ -84,46 +66,27 @@ for i = 1:stage
     if disp_en==1
         disp('compute inscribed ellipsoid')
     end
-    lambda_B = svd(B_mve);
-    
-    w_cvx(i)        = 2*lambda_B(end,:);
-    ofset(:,i+1)   	= d_mve;
+% next stage parameter
+%     w_cvx(i)        = cheby_center.r;
+    Phi_var(i+1)    =  w_cvx(i);
+%     ofset(:,i+1)   	= cheby_center.x;
     
     x_adpt          = x_opt;
-    
-    Phi_var(i+1)    =  w_cvx(i);
-    
     %% visiual adaptivity
-    if disp_en
-        if n == 2
-            close all;
-            figure(1);
-            hold on;
-            % norm constraint
-            sp  = -L_inf:(L_inf/100):L_inf;
-            plot(L_inf*ones(length(sp)),sp,'.b','markersize',5);
-            plot(-L_inf*ones(length(sp)),sp,'.b','markersize',5);
-            plot(sp,L_inf*ones(length(sp)),'.b','markersize',5);
-            plot(sp,-L_inf*ones(length(sp)),'.b','markersize',5);
-            plot(x_org(1),x_org(2),'.r','markersize',40);
-            t1 = -4*L_inf:(L_inf/100):4*L_inf;
-            for k = 1:length(y)
-                t2 = -((A(k,1)/A(k,2))*(t1-Phi(1,k)))+Phi(2,k);
-                plot(t1,t2);
-                xlim([-L_inf L_inf]);
-                ylim([-L_inf L_inf]);
-            end
-            noangles = 200;
-            angles   = linspace( 0, 2 * pi, noangles );
-            ellipse_inner  = B_mve * [ cos(angles) ; sin(angles) ] + d_mve * ones( 1, noangles );
-            plot(d_mve(1),d_mve(2),'.g','markersize',40);
-            plot(x_opt(1),x_opt(2),'.b','markersize',35);
-            plot( ellipse_inner(1,:), ellipse_inner(2,:), 'r--' );
-            figure(2);
-            stem(w_cvx);
-            pause(1)
-            hold off;
+    if 0
+        hold on;
+        if n==2 && i~= stage
+            
+            plot(current_Polyhedron,'color','blue','alpha',0.2,'linestyle','--')
+            
         end
+        if n==3 && i~= stage
+            figure(i);
+            
+            plot(current_Polyhedron,'color','blue','alpha',0.2,'linestyle','--')
+            
+        end
+        hold off;
     end
 end
 save log;
