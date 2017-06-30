@@ -36,8 +36,16 @@ for i = 1:stage
     tau         = [tau ; tau_temp];
     ply_nrml    = -y.*A;
     ply_ofst    = -y.*tau;
-    if disp_en==1
+    if 1
         current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
+        current_Polyhedron = current_Polyhedron.computeVRep;
+        Vply            = current_Polyhedron.V;
+        A_center        = sum(Vply)./(size(Vply,1));
+        dist            = zeros(size(Vply,1)+1,1);
+        for i = 1:size(Vply,1)
+            dist(i)     = norm(A_center-Vply(i,:));
+        end
+        A_radious       = max(dist);
         disp('compute MTP3 polyhedron')
     end
     
@@ -51,42 +59,25 @@ for i = 1:stage
     if disp_en==1
         disp('compute optimal solution')
     end
-
-    % Maximum volume inscribed ellipsoid in a polyhedron
-    cvx_begin quiet;
-    variable B_mve(n,n) symmetric
-    variable d_mve(n)
-    maximize( det_rootn( B_mve ) )
-    subject to
-    for k = 1:length(ply_ofst)
-        norm( B_mve*ply_nrml(k,:)', 2 ) + ply_nrml(k,:)*d_mve <= ply_ofst(k);
-    end
-    cvx_end
-    save log;
-    if disp_en==1
-        disp('compute inscribed ellipsoid')
-    end
-% next stage parameter
-%     w_cvx(i)        = cheby_center.r;
+   
+    % next stage parameter
+    w_cvx(i)        = A_radious;
     Phi_var(i+1)    =  w_cvx(i);
-%     ofset(:,i+1)   	= cheby_center.x;
+    ofset(:,i+1)   	= A_center;
     
     x_adpt          = x_opt;
     %% visiual adaptivity
-    if 0
+    if 1
         hold on;
-        if n==2 && i~= stage
-            
+        if n==2
             plot(current_Polyhedron,'color','blue','alpha',0.2,'linestyle','--')
-            
         end
-        if n==3 && i~= stage
-            figure(i);
-            
+        if n==3
             plot(current_Polyhedron,'color','blue','alpha',0.2,'linestyle','--')
-            
         end
-        hold off;
+        if i== stage
+            hold off;
+        end
     end
 end
 save log;

@@ -10,10 +10,10 @@ disp_en           = 1;
 %%
 dtr_x             = 0;
 %% signal parameter
-n                   = 8; % signal dimension
-s                   = 1; % sparsity
+n                   = 10; % signal dimension
+s                   = 2; % sparsity
 % number of measurment
-m_temp           	= 120;
+m_temp           	= 150;
 % m_temp              = ceil(s*log(n/s));
 
 blk_s   = 50;
