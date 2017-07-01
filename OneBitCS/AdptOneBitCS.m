@@ -26,7 +26,7 @@ for i = 1:stage
     y_temp      = theta(yp_temp);
     tau_temp    = sum(A_temp'.*Phi_temp)';
     if disp_en==1
-        disp('measure procedure')
+        disp('measure procedure ended')
     end
     %% recovery procedure
     % polyhedron normal and ofset
@@ -38,15 +38,7 @@ for i = 1:stage
     ply_ofst    = -y.*tau;
     if 1
         current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
-        current_Polyhedron = current_Polyhedron.computeVRep;
-        Vply            = current_Polyhedron.V;
-        A_center        = sum(Vply)./(size(Vply,1));
-        dist            = zeros(size(Vply,1)+1,1);
-        for i = 1:size(Vply,1)
-            dist(i)     = norm(A_center-Vply(i,:));
-        end
-        A_radious       = max(dist);
-        disp('compute MTP3 polyhedron')
+        disp('MPT3 polyhedron computed')
     end
     
     % compute optimal solution
@@ -57,18 +49,29 @@ for i = 1:stage
     ply_nrml*x_opt  <= ply_ofst;
     cvx_end
     if disp_en==1
-        disp('compute optimal solution')
+        disp('optimal solution computed')
     end
-   
+    
+    % Computing Analytic center
+    cvx_begin quiet;
+    variable x_ac(n);
+    minimize -sum(log(ply_ofst-ply_nrml*x_ac));
+    cvx_end
+    if disp_en==1
+        disp('Analytic center computed')
+    end
+    
     % next stage parameter
-    w_cvx(i)        = A_radious;
-    Phi_var(i+1)    =  w_cvx(i);
-    ofset(:,i+1)   	= A_center;
+%     w_cvx(i)        = A_radious;
+%     Phi_var(i+1)    =  w_cvx(i);
+    ofset(:,i+1)   	= x_ac;
     
     x_adpt          = x_opt;
     %% visiual adaptivity
     if 1
-        hold on;
+        if i== 1
+            hold on;
+        end
         if n==2
             plot(current_Polyhedron,'color','blue','alpha',0.2,'linestyle','--')
         end
