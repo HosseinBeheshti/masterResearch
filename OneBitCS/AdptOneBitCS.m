@@ -73,10 +73,12 @@ for i = 1:stage
             hold on;
         end
         if n==2
-            plot(current_Polyhedron,'color','blue','alpha',0.2,'linestyle','--')
+            plot(current_Polyhedron,'color','blue','alpha',0.2)
+            plot(x_ac(1),x_ac(2),'.g','markersize',40);
         end
         if n==3
-            plot(current_Polyhedron,'color','blue','alpha',0.2,'linestyle','--')
+            plot(current_Polyhedron,'color','blue','alpha',0.2)
+            plot3(x_ac(1),x_ac(2),x_ac(3),'.g','markersize',40);
         end
         if i== stage
             hold off;
