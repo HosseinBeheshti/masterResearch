@@ -61,24 +61,55 @@ for i = 1:stage
         disp('Analytic center computed')
     end
     
+    % Computing Gaussian width
+    E_W_size    = 10;
+    w_cvx_temp  = zeros(1,E_W_size);
+    for k = 1:E_W_size
+        g = normrnd(0,1,1,n);
+        % sup
+        cvx_begin quiet;
+        variable w_s(n);
+        maximize g*w_s;
+        subject to
+        ply_nrml*w_s  <= ply_ofst;
+        cvx_end
+        % inf
+        cvx_begin quiet;
+        variable w_i(n);
+        minimize g*w_i;
+        subject to
+        ply_nrml*w_i  <= ply_ofst;
+        cvx_end
+        % average
+        w_cvx_temp(k)  = norm(abs(w_s-w_i));
+    end
+    if disp_en==1
+        disp('Gaussian width computed')
+    end    
+    
+    
     % next stage parameter
-%     w_cvx(i)        = A_radious;
-%     Phi_var(i+1)    =  w_cvx(i);
+    w_cvx(i)        = sum(w_cvx_temp')./E_W_size;
+    Phi_var(i+1)    = w_cvx(i);
     ofset(:,i+1)   	= x_ac;
     
     x_adpt          = x_opt;
     %% visiual adaptivity
-    if 1
+    if n==2 || n==3
         if i== 1
             hold on;
         end
         if n==2
             plot(current_Polyhedron,'color','blue','alpha',0.2)
             plot(x_ac(1),x_ac(2),'.g','markersize',40);
+            plot(w_s(1),w_s(2),'*r','markersize',15);
+            plot(w_i(1),w_i(2),'*r','markersize',15);
         end
         if n==3
             plot(current_Polyhedron,'color','blue','alpha',0.2)
             plot3(x_ac(1),x_ac(2),x_ac(3),'.g','markersize',40);
+            plot3(w_s(1),w_s(2),w_s(3),'*r','markersize',15);
+            plot3(w_i(1),w_i(2),w_i(3),'*r','markersize',15);
         end
         if i== stage
             hold off;
