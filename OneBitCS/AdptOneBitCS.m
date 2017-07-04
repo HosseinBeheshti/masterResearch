@@ -41,7 +41,7 @@ for i = 1:stage
         disp('MPT3 polyhedron computed')
     end
     
-    % compute optimal solution
+    % Compute optimal solution
     cvx_begin quiet;
     variable x_opt(n);
     minimize(norm(x_opt,1));
