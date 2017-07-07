@@ -13,13 +13,13 @@ dtr_x             = 0;
 n                   = 2; % signal dimension
 s                   = 2; % sparsity
 % number of measurment
-m_temp           	= 150;
+m_temp           	= 50;
 % m_temp              = ceil(s*log(n/s));
 
 blk_s   = 50;
 
-Rmax    = 10; % upper bound for ||x||
-Rmin    = 1; % lower bound for ||x||
+Rmax    = 20; % upper bound for ||x||
+Rmin    = 8; % lower bound for ||x||
 L_inf   = Rmax; % upper bound of ||x||_{\inf}
 
 tau     = Rmin;% Threshold parameter: an alternative is

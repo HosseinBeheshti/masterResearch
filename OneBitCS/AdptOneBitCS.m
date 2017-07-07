@@ -1,14 +1,14 @@
 function x_adpt = AdptOneBitCS(x_org,n,s,m,L_inf,blk_s,disp_en)
 stage       = ceil(m/blk_s);
 A_var       = 1;
-Phi_var     = 5*ones(stage,1);
+Phi_var     = 1*ones(stage,1);
 w_cvx       = zeros(1,stage);
 ofset       = zeros(n,stage);
 % l_{\inf} polyhedron
 ATemp       = kron(eye(n),ones(2,1));
 PhiTemp     = L_inf.*kron(eye(n),[1; -1])';
 tauTemp     = sum(ATemp'.*PhiTemp)';
-yTemp       = tauTemp;
+yTemp       = theta(tauTemp);
 
 A           = ATemp;
 Phi         = PhiTemp;
@@ -36,8 +36,13 @@ for i = 1:stage
     tau         = [tau ; tau_temp];
     ply_nrml    = -y.*A;
     ply_ofst    = -y.*tau;
-    if 1
-        current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
+    
+    current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);  
+    
+    ply_nrml = current_Polyhedron.H(:,(1:end-1));
+    ply_ofst = current_Polyhedron.H(:,end);
+
+    if disp_en==1
         disp('MPT3 polyhedron computed')
     end
     
@@ -86,13 +91,13 @@ for i = 1:stage
     end
     if disp_en==1
         disp('Gaussian width computed')
-    end    
+    end
     
     
     % next stage parameter
     w_cvx(i)        = sum(w_cvx_temp')./E_W_size;
     Phi_var(i+1)    = w_cvx(i);
-    ofset(:,i+1)   	= x_c;
+    ofset(:,i+1)   	= x_ac;
     
     x_adpt          = x_opt;
     %% visiual adaptivity
@@ -102,17 +107,24 @@ for i = 1:stage
         end
         if n==2
             plot(current_Polyhedron,'color','blue','alpha',0.2)
-            plot(x_c(1),x_c(2),'.g','markersize',40);
+            plot(x_ac(1),x_ac(2),'.g','markersize',40);
             plot(w_s(1),w_s(2),'*r','markersize',15);
             plot(w_i(1),w_i(2),'*r','markersize',15);
         end
         if n==3
             plot(current_Polyhedron,'color','blue','alpha',0.2)
-            plot3(x_c(1),x_c(2),x_c(3),'.g','markersize',40);
+            plot3(x_ac(1),x_ac(2),x_ac(3),'.g','markersize',40);
             plot3(w_s(1),w_s(2),w_s(3),'*r','markersize',15);
             plot3(w_i(1),w_i(2),w_i(3),'*r','markersize',15);
         end
         if i== stage
+            if n==2
+                plot(x_adpt(1),x_adpt(2),'*r','markersize',15);
+            end
+            if n==3
+                plot3(x_adpt(1),x_adpt(2),x_adpt(3),'*r','markersize',15);
+            end
+            
             hold off;
         end
     end

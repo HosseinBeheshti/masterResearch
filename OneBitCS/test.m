@@ -14,7 +14,7 @@ x_c_hypln   = [g*(xd-x_ac) == 0];
 o           = zeros(n,1);
 S           = YSet(xd,x_c_hypln);
 dst         = distance(S,o);
-disp(dst)
+% disp(dst)
 
 
 %%
