@@ -36,13 +36,10 @@ for i = 1:stage
     tau         = [tau ; tau_temp];
     ply_nrml    = -y.*A;
     ply_ofst    = -y.*tau;
-    
-    current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);  
-    
-    ply_nrml = current_Polyhedron.H(:,(1:end-1));
-    ply_ofst = current_Polyhedron.H(:,end);
-
     if disp_en==1
+        current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
+%         ply_nrml = current_Polyhedron.H(:,(1:end-1));
+%         ply_ofst = current_Polyhedron.H(:,end);
         disp('MPT3 polyhedron computed')
     end
     
@@ -107,22 +104,22 @@ for i = 1:stage
         end
         if n==2
             plot(current_Polyhedron,'color','blue','alpha',0.2)
-            plot(x_ac(1),x_ac(2),'.g','markersize',40);
+            plot(x_ac(1),x_ac(2),'.g','markersize',15);
             plot(w_s(1),w_s(2),'*r','markersize',15);
             plot(w_i(1),w_i(2),'*r','markersize',15);
         end
         if n==3
             plot(current_Polyhedron,'color','blue','alpha',0.2)
-            plot3(x_ac(1),x_ac(2),x_ac(3),'.g','markersize',40);
+            plot3(x_ac(1),x_ac(2),x_ac(3),'.g','markersize',15);
             plot3(w_s(1),w_s(2),w_s(3),'*r','markersize',15);
             plot3(w_i(1),w_i(2),w_i(3),'*r','markersize',15);
         end
         if i== stage
             if n==2
-                plot(x_adpt(1),x_adpt(2),'*r','markersize',15);
+                plot(x_adpt(1),x_adpt(2),'.b','markersize',25);
             end
             if n==3
-                plot3(x_adpt(1),x_adpt(2),x_adpt(3),'*r','markersize',15);
+                plot3(x_adpt(1),x_adpt(2),x_adpt(3),'.b','markersize',25);
             end
             
             hold off;
