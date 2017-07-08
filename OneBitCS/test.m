@@ -2,8 +2,10 @@ clear;
 close all;
 clc;
 %%
+
+%%
 load log;
-if 1
+if 0
 % l_{\inf} polyhedron
 ATemp       = kron(eye(n),ones(2,1));
 PhiTemp     = L_inf.*kron(eye(n),[1; -1])';
@@ -18,17 +20,24 @@ y           = -yTemp;
 ply_nrml    = -y.*A;
 ply_ofst    = -y.*tau;
 ply_nrml    = [ply_nrml;1,0.9;-1,-1;-1,1];
-ply_ofst    = [ply_ofst; 0.1;0.2;3];
+ply_ofst    = [ply_ofst; -1;7;12];
 end
 current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
-ply_nrml = current_Polyhedron.H(:,(1:end-1));
-ply_ofst = current_Polyhedron.H(:,end);
+
+[a, c]= poly_irredundant(current_Polyhedron);
+
+%%
+ObjectiveFunction = @(x)log_barrier(x,poly_normal,poly_ofset);
+X0 = [1 1];
+[x,fval] = patternsearch(ObjectiveFunction,X0,[],[],[],[],[],[],[]);
+%%
 % Analytic center
 cvx_begin
 variable x(n)
-minimize -sum(log(ply_ofst-ply_nrml*x))
+minimize -sum(log(poly_ofset-poly_normal*x))
 %     F*x == g
 cvx_end
+
 %%
 hold on;
 plot(current_Polyhedron,'color','blue','alpha',0.2)
