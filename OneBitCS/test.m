@@ -24,20 +24,34 @@ ply_ofst    = [ply_ofst; -1;7;12];
 end
 current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
 
-[a, c]= poly_irredundant(current_Polyhedron);
-
+       ply_nrml = current_Polyhedron.H(:,(1:end-1));
+        ply_ofst = current_Polyhedron.H(:,end);
+       disp(current_Polyhedron.H(:,(1:end-1)));
+        disp(current_Polyhedron.H(:,end));
 %%
-ObjectiveFunction = @(x)log_barrier(x,poly_normal,poly_ofset);
-X0 = [1 1];
-[x,fval] = patternsearch(ObjectiveFunction,X0,[],[],[],[],[],[],[]);
-%%
-% Analytic center
+% Analytic center cvx
 cvx_begin
 variable x(n)
-minimize -sum(log(poly_ofset-poly_normal*x))
+minimize -sum(log(ply_ofst-ply_nrml*x))
 %     F*x == g
 cvx_end
+%%
+% Analytic center OPTI
+% Objective
+fun = @(x) -sum(log(ply_ofst-ply_nrml*x));
 
+% Linear Constraints
+A = ply_nrml;
+b = ply_ofst;
+
+%Initial Guess
+x0 = [0;0];  
+
+% Create OPTI Object
+Opt = opti('fun',fun,'ineq',ply_nrml,ply_ofst);
+
+% Solve the MINLP problem
+[x,fval,exitflag,info] = solve(Opt,x0)
 %%
 hold on;
 plot(current_Polyhedron,'color','blue','alpha',0.2)

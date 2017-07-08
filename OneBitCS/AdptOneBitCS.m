@@ -38,8 +38,9 @@ for i = 1:stage
     ply_ofst    = -y.*tau;
     if disp_en==1
         current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
-%         ply_nrml = current_Polyhedron.H(:,(1:end-1));
-%         ply_ofst = current_Polyhedron.H(:,end);
+        ply_nrml = current_Polyhedron.H(:,(1:end-1));
+        ply_ofst = current_Polyhedron.H(:,end);
+        pause
         disp('MPT3 polyhedron computed')
     end
     
