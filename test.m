@@ -26,8 +26,9 @@ current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
 
        ply_nrml = current_Polyhedron.H(:,(1:end-1));
         ply_ofst = current_Polyhedron.H(:,end);
-       disp(current_Polyhedron.H(:,(1:end-1)));
-        disp(current_Polyhedron.H(:,end));
+V_cnt = sum(current_Polyhedron.V)./size(current_Polyhedron.V,1);
+%%
+ cheby_c = chebyCenter(current_Polyhedron);
 %%
 % Analytic center cvx
 cvx_begin
@@ -35,27 +36,13 @@ variable x(n)
 minimize -sum(log(ply_ofst-ply_nrml*x))
 %     F*x == g
 cvx_end
-%%
-% Analytic center OPTI
-% Objective
-fun = @(x) -sum(log(ply_ofst-ply_nrml*x));
 
-% Linear Constraints
-A = ply_nrml;
-b = ply_ofst;
-
-%Initial Guess
-x0 = [0;0];  
-
-% Create OPTI Object
-Opt = opti('fun',fun,'ineq',ply_nrml,ply_ofst);
-
-% Solve the MINLP problem
-[x,fval,exitflag,info] = solve(Opt,x0)
 %%
 hold on;
 plot(current_Polyhedron,'color','blue','alpha',0.2)
 plot(x(1),x(2),'.g','markersize',15);
+plot(V_cnt(1),V_cnt(2),'.r','markersize',15);
+plot(cheby_c.x(1),cheby_c.x(2),'.y','markersize',15);
 hold off;
 disp(x)
 
