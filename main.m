@@ -13,10 +13,10 @@ dtr_x             = 0;
 n                   = 2; % signal dimension
 s                   = 2; % sparsity
 % number of measurment
-m_temp           	= 50;
+m_temp           	= 90;
 % m_temp              = ceil(s*log(n/s));
 
-blk_s   = 50;
+blk_s   = 30;
 
 Rmax    = 20; % upper bound for ||x||
 Rmin    = 8; % lower bound for ||x||

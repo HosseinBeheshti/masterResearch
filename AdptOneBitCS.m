@@ -55,10 +55,7 @@ for i = 1:stage
     end
     
     % Computing Analytic center
-    cvx_begin quiet;
-    variable x_ac(n);
-    minimize -sum(log(ply_ofst-ply_nrml*x_ac));
-    cvx_end
+    x_ac = sum(current_Polyhedron.V)./size(current_Polyhedron.V,1);
     if disp_en==1
         disp('Analytic center computed')
     end
@@ -103,23 +100,25 @@ for i = 1:stage
             hold on;
         end
         if n==2
-            plot(current_Polyhedron,'color','blue','alpha',0.2)
+            plot(current_Polyhedron,'color','blue','alpha',0.1)
             plot(x_ac(1),x_ac(2),'.g','markersize',15);
-            plot(w_s(1),w_s(2),'*r','markersize',15);
-            plot(w_i(1),w_i(2),'*r','markersize',15);
+            %             plot(w_s(1),w_s(2),'*r','markersize',15);
+            %             plot(w_i(1),w_i(2),'*r','markersize',15);
         end
         if n==3
-            plot(current_Polyhedron,'color','blue','alpha',0.2)
+            plot(current_Polyhedron,'color','blue','alpha',0.1)
             plot3(x_ac(1),x_ac(2),x_ac(3),'.g','markersize',15);
-            plot3(w_s(1),w_s(2),w_s(3),'*r','markersize',15);
-            plot3(w_i(1),w_i(2),w_i(3),'*r','markersize',15);
+            %             plot3(w_s(1),w_s(2),w_s(3),'*r','markersize',15);
+            %             plot3(w_i(1),w_i(2),w_i(3),'*r','markersize',15);
         end
         if i== stage
             if n==2
                 plot(x_adpt(1),x_adpt(2),'.b','markersize',25);
+                plot(x_org(1),x_org(2),'.r','markersize',25);
             end
             if n==3
                 plot3(x_adpt(1),x_adpt(2),x_adpt(3),'.b','markersize',25);
+                plot3(x_org(1),x_org(2),x_org(3),'.r','markersize',25);
             end
             
             hold off;
