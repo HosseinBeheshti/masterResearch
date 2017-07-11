@@ -2,12 +2,8 @@
 %%
 clear;
 
-Rmax    = 8; % upper bound for ||x||
-Rmin    = 1; % lower bound for ||x||
-L_inf   = Rmax; % upper bound of ||x||_{\inf}
-
-n = 3;
-if 1
+load log;
+if 0
     % l_{\inf} polyhedron
     ATemp       = kron(eye(n),ones(2,1));
     PhiTemp     = L_inf.*kron(eye(n),[1; -1])';
@@ -27,12 +23,24 @@ current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
 % % test_poly = slice
 %%
 close all;
+sweep_d = -L_inf:2:L_inf;
+Volume_clt = zeros(n,length(sweep_d));
+dim_vec     = 1:n;
+if n==2 || n==3
+    figure(1)
+    plot(current_Polyhedron,'color','blue','alpha',0.1)
+end
+figure(2)
+hold on;
+for i = 1:n
+    for k =1:length(sweep_d)
+        slice_poly = slice(current_Polyhedron,i,sweep_d(k),'keepDim',true);
+        dim_proj = [dim_vec(1:i-1) dim_vec(i+1:n)];
+        F = projection(slice_poly,dim_proj);
+        Volume_clt(i,k) = volume(F);
+    end
+    plot(Volume_clt(i,:))
+end
+hold off;
 
-slice_poly = slice(current_Polyhedron,1,1,'keepDim',true);
-
-F = projection(slice_poly,2:3);
-disp(volume(F))
-
-current_Polyhedron.plot('alpha',0.2,'color','lightblue'); hold on;
-F.plot('color','blue','alpha',0.2,'linestyle','--','linewidth',3);
-axis tight;
+volume(current_Polyhedron)
