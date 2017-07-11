@@ -1,7 +1,7 @@
 function x_adpt = AdptOneBitCS(x_org,n,s,m,L_inf,blk_s,disp_en)
 stage       = ceil(m/blk_s);
 A_var       = 1;
-Phi_var     = 1*ones(stage,1);
+Phi_var     = L_inf*ones(stage,1);
 w_cvx       = zeros(1,stage);
 ofset       = zeros(n,stage);
 % l_{\inf} polyhedron

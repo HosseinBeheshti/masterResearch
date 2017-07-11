@@ -1,32 +1,38 @@
+% compute cube
+%%
 clear;
-close all;
-clc;
-%%
 
-%%
-load log;
+Rmax    = 8; % upper bound for ||x||
+Rmin    = 1; % lower bound for ||x||
+L_inf   = Rmax; % upper bound of ||x||_{\inf}
 
+n = 3;
+if 1
+    % l_{\inf} polyhedron
+    ATemp       = kron(eye(n),ones(2,1));
+    PhiTemp     = L_inf.*kron(eye(n),[1; -1])';
+    tauTemp     = sum(ATemp'.*PhiTemp)';
+    yTemp       = theta(tauTemp);
+    
+    A           = ATemp;
+    Phi         = PhiTemp;
+    tau         = tauTemp;
+    y           = -yTemp;
+    
+    ply_nrml    = -y.*A;
+    ply_ofst    = -y.*tau;
+end
 current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
-
-       ply_nrml = current_Polyhedron.H(:,(1:end-1));
-        ply_ofst = current_Polyhedron.H(:,end);
-V_cnt = sum(current_Polyhedron.V)./size(current_Polyhedron.V,1);
 %%
- cheby_c = chebyCenter(current_Polyhedron);
+% % test_poly = slice
 %%
-% Analytic center cvx
-cvx_begin
-variable x(n)
-minimize -sum(log(ply_ofst-ply_nrml*x))
-%     F*x == g
-cvx_end
+close all;
 
-%%
-hold on;
-plot(current_Polyhedron,'color','blue','alpha',0.2)
-plot(x(1),x(2),'.g','markersize',15);
-plot(V_cnt(1),V_cnt(2),'.r','markersize',15);
-% plot(cheby_c.x(1),cheby_c.x(2),'.y','markersize',15);
-hold off;
-disp(x)
+slice_poly = slice(current_Polyhedron,1,1,'keepDim',true);
 
+F = projection(slice_poly,2:3);
+disp(volume(F))
+
+current_Polyhedron.plot('alpha',0.2,'color','lightblue'); hold on;
+F.plot('color','blue','alpha',0.2,'linestyle','--','linewidth',3);
+axis tight;
