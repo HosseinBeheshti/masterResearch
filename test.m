@@ -1,24 +1,8 @@
-% compute cube
+% compute brunn 
 %%
 clear;
-
+tic;
 load log;
-if 0
-    % l_{\inf} polyhedron
-    ATemp       = kron(eye(n),ones(2,1));
-    PhiTemp     = L_inf.*kron(eye(n),[1; -1])';
-    tauTemp     = sum(ATemp'.*PhiTemp)';
-    yTemp       = theta(tauTemp);
-    
-    A           = ATemp;
-    Phi         = PhiTemp;
-    tau         = tauTemp;
-    y           = -yTemp;
-    
-    ply_nrml    = -y.*A;
-    ply_ofst    = -y.*tau;
-end
-current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
 %%
 % % test_poly = slice
 %%
@@ -39,8 +23,12 @@ for i = 1:n
         F = projection(slice_poly,dim_proj);
         Volume_clt(i,k) = volume(F);
     end
+    disp(i/n)
     plot(Volume_clt(i,:))
 end
 hold off;
 
 volume(current_Polyhedron)
+toc
+
+save log;
