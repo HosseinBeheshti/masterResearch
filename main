@@ -1,7 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This file contains the reproducible experiments mentioned in the article
-% EXPONENTIAL DECAY OF RECONSTRUCTION ERROR 
-% FROM BINARY MEASUREMENTS OF SPARSE SIGNALS
+% Adaptive dictionary-sparse signal
 % by Baraniuk, Foucart, Needell, Plan, and Wooters
 % Created 12 Feb 2014
 % Last modified 29 July 2014
@@ -17,8 +16,8 @@ cvx_setup
 % Verification that the auxiliary and main algorithms work as intended %% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-clear; clc;  % clear the workspace and the screen 
-cvx_quiet true   % turn off the messages delivered to the screen 
+clear; clc;                     % clear the workspace and the screen 
+cvx_quiet true                  % turn off the messages delivered to the screen 
 
 % define the sparse vector x to be recovered
 n = 100;                        % size of x
