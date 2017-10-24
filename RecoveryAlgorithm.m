@@ -1,5 +1,4 @@
-function [xSOCP_Order1] = SOCP_Order1(y,A,R,tau)
-
+function [x_out] = RecoveryAlgorithm(y,A,r,tau,t,type)
 % y: the vector of quantized measurements
 % A: the matrix whose rows give the measurements
 % R: an (over)estimation of the magnitude of the vector to be recovered
@@ -10,10 +9,10 @@ function [xSOCP_Order1] = SOCP_Order1(y,A,R,tau)
 [m,n] = size(A);
 cvx_begin
     variable xSOCP_Order1(n);
-    minimize( norm(xSOCP_Order1,1) );
+    minimize( norm(x_out,1) );
     subject to 
-      y.*(A*xSOCP_Order1-tau) >= zeros(m,1);
-      norm(xSOCP_Order1,2) <= R;
+      y.*(A*x_out-tau) >= zeros(m,1);
+      norm(x_out,2) <= r;
 cvx_end
 
 end

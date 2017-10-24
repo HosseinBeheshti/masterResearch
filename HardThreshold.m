@@ -1,4 +1,4 @@
-function [x_thresholded, supp] = hard_threshold(x,s)
+function [x_thresholded, supp] = HardThreshold(x,s)
 
 % x: the vector to be hard-thresholded
 % s: the number of nonzero entries to be kept
