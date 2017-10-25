@@ -5,15 +5,14 @@ function D = DictionaryGenerator(n,N,type)
 
 % Dictionary: Real
 if (isequal(type ,'Rl'))
-    for i=1:n
-        w=randn(N,1);
+    for i=1:N
+        w=randn(n,1);
         normw=norm(w);
         Dtemp(i,:)=w/normw;
     end
-    D=Dtemp;
+    Dtemp = orth(Dtemp);
+    D=Dtemp';
 end
-
-
 
 % Dictionary: Overcomplete DFT
 if (isequal(type ,'ODFT'))

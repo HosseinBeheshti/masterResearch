@@ -11,9 +11,9 @@ x(supp) = randn(s,1);       	% entries of x on its support
 % Generate dictionary
 n = 10;                        % number of dictionary rows
 DType = 'Rl';                   % dictionary type /in {ODFT}
-D = DictionaryGen(n,N,DType);
+D = DictionaryGenerator(n,N,DType);
 f = D*x;
-
+a = D*D';
 r = 1.5*norm(f);                % an (over)estimation of the magnitude of f
 
 %%
