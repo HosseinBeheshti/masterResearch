@@ -1,36 +1,43 @@
 clear;
-clc;                     % clear the workspace and the screen
+clc;
+close all;
+cvx_quiet true;
 %%
 % define the sparse vector x
-N = 10;                      	% size of x
-s = 1;                         % sparsity of x
+N = 100;                      	% size of x
+s = 3;                         % sparsity of x
 supp = sort(randsample(N,s));   % support of x
 x = zeros(N,1);
 x(supp) = randn(s,1);       	% entries of x on its support
 
 % Generate dictionary
-n = 2;                        % number of dictionary rows
+n = 50;                        % number of dictionary rows
 DType = 'Rl';                   % dictionary type /in {ODFT}
 D = DictionaryGenerator(n,N,DType);
 f = D*x;
 
-r = 1.5*norm(f);                % an (over)estimation of the magnitude of f
+r = 2*norm(f);                % an (over)estimation of the magnitude of f
 
 %%
 % specify the random measurements to be used
-m = 1000;                      % number of measurements
+m = 10000;                      % number of measurements
 A = randn(m,n);              % measurement matrix
 
 %% LP main
-[fLP_main,h,u] = LP_main(D,A,f,r);
-
+fLP_main = LP_main(D,A,f,r);
+err_LP = norm(fLP_main-f)/norm(f);
 %% Adaptive LP
 T = 10; % number of batch
 
-% [fLP_main,h,u] = ALP_main(y,A,D,sigma,tau,T);
-% 
-% fALP = zeros(n,1);
-% FALP = zeros(n,T);
-% for t = 1:T
-%     ATemp =
-% end
+fALP_main = ALP_main(D,A,f,r,T);
+%%
+F = f.*ones(n,T+1);
+err_ALP_Temp = fALP_main-F;
+norm_err_ALP = zeros(1,T+1);
+for i = 1:T+1
+    norm_err_ALP(i) = norm(err_ALP_Temp(:,i));
+end
+norm_err_ALP = norm_err_ALP/norm(f);
+norm_err_ALP(1) = err_LP;
+disp(norm_err_ALP)
+stem(norm_err_ALP)

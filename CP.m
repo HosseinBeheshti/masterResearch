@@ -1,4 +1,4 @@
-function f_LP = LP(y,A,D,th_var,tau)
+function f_CP = CP(y,A,D,th_var,tau)
 [m,n]= size(A);
 % compute optimal solution
 cvx_begin;
@@ -10,5 +10,5 @@ y.*(A*h-(u/th_var).*tau) >= 0;
 norm(A*h-(u/th_var).*tau,1)<= 1;
 cvx_end
 
-f_LP = (th_var/u).*h;
+f_CP = (th_var/u).*h;
 end

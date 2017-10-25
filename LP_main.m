@@ -1,7 +1,7 @@
-function [fLP_main,h,u] = LP_main(D,A,f,sigma)
+function [fLP_main,h,u] = LP_main(D,A,f,th_var)
 [m,n]= size(A);
 DitherType = 'LP';
-tau = DitherGenerator(m,sigma,DitherType);
+tau = DitherGenerator(m,th_var,DitherType);
 y = sign(A*f-tau);
-[fLP_main,h,u] = LP(y,A,D,sigma,tau);
+fLP_main = LP(y,A,D,th_var,tau);
 end
