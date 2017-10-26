@@ -1,4 +1,0 @@
-function [tau, supp] = DitherGenerator(A,f,s,r)
-
-
-end
