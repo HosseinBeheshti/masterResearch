@@ -1,14 +1,13 @@
-function f_CP = CP(y,A,D,th_var,tau)
+function f_CP = CP(y,A,D,tau,r)
 [m,n]= size(A);
-% compute optimal solution
+% Second-order cone programming 
 cvx_begin;
 variable h(n);
-variable u;
-minimize(norm(D'*h,1)+abs(u));
+minimize(norm(D'*h,1));
 subject to
-y.*(A*h-(u/th_var).*tau) >= 0;
-norm(A*h-(u/th_var).*tau,1)<= 1;
+y.*(A*h-tau) >= 0;
+norm(h,2)<= r;
 cvx_end
 
-f_CP = (th_var/u).*h;
+f_CP = h;
 end

@@ -5,4 +5,9 @@ if (isequal(type ,'LP'))
     tau = th_var^2.*randn(m,1);
 end
 
+% Second-order cone programming 
+if (isequal(type ,'CP'))
+    tau = th_var^2.*randn(m,1);
+end
+
 end
