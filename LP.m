@@ -1,4 +1,8 @@
 function f_LP = LP(y,A,D,th_var,tau)
+% y: the vector of quantized measurements 
+% A: the matrix whose rows give the measurements
+% D: the dictionary whose give the s-sparse vector
+
 [m,n]= size(A);
 % compute optimal solution
 cvx_begin;
