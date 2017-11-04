@@ -21,9 +21,9 @@ for t = 1:T
         end
         pause(1);
         plot(fACP_main(1,t),fACP_main(2,t),'.b','markersize',10);
-    end
-    if t== T
-        hold off;
+        if t== T
+            hold off;
+        end
     end
 end
 end
