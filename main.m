@@ -32,7 +32,7 @@ fACP_main = ACP_main(D,A,f,r,r,T);
 
 %% HT
 fHT_main = HT_main(D,A,f,r,r);
-err_CP = norm(fHT_main-f)/norm(f);
+err_HT = norm(fHT_main-f)/norm(f);
 
 %% Adaptive AHT
 T = 10; % number of batch
