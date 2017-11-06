@@ -6,7 +6,8 @@ if isunix
     cd('./cvx_linux');
     cvx_setup;
     cd ..
-else
+end
+if ispc
     cd('./cvx_win');
     cvx_setup;
     cd ..
@@ -30,7 +31,7 @@ r = 2*norm(f);                % an (over)estimation of the magnitude of f
 
 %%
 % specify the random measurements to be used
-m = 50000;                      % number of measurements
+m = 5000;                      % number of measurements
 A = randn(m,n);              % measurement matrix
 %% CP
 fCP_main = CP_main(D,A,f,r,r);
@@ -41,12 +42,13 @@ T = 10; % number of batch
 fACP_main = ACP_main(D,A,f,r,r,T);
 
 %% HT
-fHT_main = HT_main(D,A,f,r,r);
+t_HT = ceil((s+1));
+fHT_main = HT_main(D,A,f,t_HT,r,r);
 err_HT = norm(fHT_main-f)/norm(f);
 
 %% Adaptive AHT
-T = 10; % number of batch
-fAHT_main = AHT_main(D,A,f,r,r,T);
+% T = 10; % number of batch
+% fAHT_main = AHT_main(D,A,f,r,r,T);
 
 %%
 

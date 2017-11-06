@@ -10,4 +10,9 @@ if (isequal(type ,'CP'))
     tau = th_var^2.*randn(m,1);
 end
 
+% Hard thresholding 
+if (isequal(type ,'HT'))
+    tau = th_var^2.*randn(m,1);
+end
+
 end
