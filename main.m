@@ -1,6 +1,16 @@
 clear;
 clc;
 close all;
+%% CVX setup
+if isunix
+    cd('./cvx_linux');
+    cvx_setup;
+    cd ..
+else
+    cd('./cvx_win');
+    cvx_setup;
+    cd ..
+end
 cvx_quiet true;
 %%
 % define the sparse vector x
