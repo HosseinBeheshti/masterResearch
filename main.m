@@ -15,14 +15,14 @@ end
 cvx_quiet true;
 %%
 % define the sparse vector x
-N = 100;                      	% size of x
-s = 10;                         % sparsity of x
+N = 10;                      	% size of x
+s = 1;                         % sparsity of x
 supp = sort(randsample(N,s));   % support of x
 x = zeros(N,1);
 x(supp) = randn(s,1);       	% entries of x on its support
 
 % Generate dictionary
-n = 72;                        % number of dictionary rows
+n = 2;                        % number of dictionary rows
 DType = 'Rl';                   % dictionary type /in {ODFT}
 D = DictionaryGenerator(n,N,DType);
 f = D*x;
@@ -31,7 +31,7 @@ r = 2*norm(f);                % an (over)estimation of the magnitude of f
 
 %%
 % specify the random measurements to be used
-m = 7000;                      % number of measurements
+m = 100;                      % number of measurements
 A = randn(m,n);              % measurement matrix
 %% CP
 fCP_main = CP_main(D,A,f,r,r);

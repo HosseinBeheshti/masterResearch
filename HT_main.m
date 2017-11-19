@@ -2,7 +2,7 @@ function fHT_main = HT_main(D,A,f,t,th_var,r)
 
 [m,n]= size(A);
 DitherType = 'HT';
-tau = DitherGenerator(m,th_var,DitherType);
+tau = 0.*DitherGenerator(m,th_var,DitherType);
 y = sign(A*f-tau);
 
 
@@ -10,13 +10,13 @@ y = sign(A*f-tau);
 max_itr	= 3000;
 htol 	= 0;
 
-z_temp 	= zeros(n+1,1);
+z_temp 	= zeros(n,1);
 hd      = Inf;
 i       = 0;
 
 while(htol < hd)&&(i < max_itr)
     % Get gradient
-    g   = N'*(sign(D'*A*z_temp) - y);
+    g   = (D'*A)'*(sign(D'*A'*z_temp) - y);
     
     % Step
     a   = z_temp - g;
