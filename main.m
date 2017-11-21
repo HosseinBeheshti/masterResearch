@@ -15,7 +15,7 @@ end
 cvx_quiet true;
 %%
 % define the sparse vector x
-N = 10;                      	% size of x
+N = 2;                      	% size of x
 s = 1;                         % sparsity of x
 supp = sort(randsample(N,s));   % support of x
 x = zeros(N,1);
