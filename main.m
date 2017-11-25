@@ -15,23 +15,23 @@ end
 cvx_quiet true;
 %%
 % define the sparse vector x
-N = 2;                      	% size of x
-s = 1;                         % sparsity of x
+N = 1000;                      	% size of x
+s = 10;                         % sparsity of x
 supp = sort(randsample(N,s));   % support of x
 x = zeros(N,1);
 x(supp) = randn(s,1);       	% entries of x on its support
 
 % Generate dictionary
-n = 2;                        % number of dictionary rows
+n = 50;                        % number of dictionary rows
 DType = 'Rl';                   % dictionary type /in {ODFT}
 D = DictionaryGenerator(n,N,DType);
 f = D*x;
-
+kapa = nnz(D'*D*x)/nnz(x);
 r = 2*norm(f);                % an (over)estimation of the magnitude of f
 
 %%
 % specify the random measurements to be used
-m = 100;                      % number of measurements
+m = 50000;                      % number of measurements
 A = randn(m,n);              % measurement matrix
 %% CP
 fCP_main = CP_main(D,A,f,r,r);
@@ -42,8 +42,10 @@ T = 10; % number of batch
 fACP_main = ACP_main(D,A,f,r,r,T);
 
 %% HT
-t_HT = ceil((s+1));
-fHT_main = HT_main(D,A,f,t_HT,r,r);
+HT_eps = r.^2/();
+HT_epsPrim = r.^2/();
+t_HT = ceil(16()*kapa*(s+1));
+fHT_main = HT_main(D,A,f,t_HT,r,x);
 err_HT = norm(fHT_main-f)/norm(f);
 
 %% Adaptive AHT
@@ -52,7 +54,6 @@ err_HT = norm(fHT_main-f)/norm(f);
 
 %% plot result
 close all;
-
 F = f.*ones(n,T+1);
 err_ACP_Temp = fACP_main-F;
 norm_err_ACP = zeros(1,T);
