@@ -70,7 +70,9 @@ end
 %% plot result
 close all;
 hold on;
-plot(10*log10(Error_CP),'.r','markersize',20);
-plot(10*log10(Error_ACP),'.b','markersize',20)
+plot((Min_itr_i:Step_itr_i:Max_itr_i),10*log10(Error_CP),'.r','markersize',20);
+plot((Min_itr_i:Step_itr_i:Max_itr_i),10*log10(Error_ACP),'.b','markersize',20)
 legend('CP','ACP')
+ylabel('Reconstruction Error (dB)')
+xlabel('measurment')
 hold off;
