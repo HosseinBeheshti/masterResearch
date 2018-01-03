@@ -14,7 +14,7 @@ if ispc
 end
 cvx_quiet true;
 %%
-Max_itr_i = 10000;
+Max_itr_i = 100000;
 Step_itr_i = 100;
 Min_itr_i = 100;
 it_number = floor((Max_itr_i-Min_itr_i)/Step_itr_i);
@@ -70,6 +70,7 @@ end
 %% plot result
 close all;
 hold on;
-plot(10*log10(Error_CP),'r');
-plot(10*log10(Error_ACP),'b')
+plot(10*log10(Error_CP),'.r','markersize',20);
+plot(10*log10(Error_ACP),'.b','markersize',20)
+legend('CP','ACP')
 hold off;
