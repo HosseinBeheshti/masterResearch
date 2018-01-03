@@ -12,7 +12,6 @@ for t = 1:T
     fACP_main(:,t+1) = fCPTemp;
     % waitbar
     perc = (t/T)*100;
-    clc;
     fprintf('fACP_main pass percent: %f\n',perc)
     %% visiual adaptivity
     if n==2
