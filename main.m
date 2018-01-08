@@ -25,13 +25,13 @@ for itr_i=Min_itr_i:Step_itr_i:Max_itr_i
 %%
 % define the sparse vector x
 N = 1000;                      	% size of x
-s = 10;                         % sparsity of x
+s = 30;                         % sparsity of x
 supp = sort(randsample(N,s));   % support of x
 x = zeros(N,1);
 x(supp) = randn(s,1);       	% entries of x on its support
 
 % Generate dictionary
-n = 50;                        % number of dictionary rows
+n = 100;                        % number of dictionary rows
 DType = 'Rl';                   % dictionary type /in {ODFT}
 D = DictionaryGenerator(n,N,DType);
 f = D*x;
@@ -62,6 +62,7 @@ end
 norm_err_ACP = norm_err_ACP/norm(f);
 
 Error_CP(itr_i/Step_itr_i) = err_CP;
+
 Error_ACP(itr_i/Step_itr_i) = norm_err_ACP(end);
 clc;
 MPrc = (itr_i/Max_itr_i)*100;
@@ -76,3 +77,4 @@ legend('CP','ACP')
 ylabel('Reconstruction Error (dB)')
 xlabel('measurment')
 hold off;
+save mysimulation
