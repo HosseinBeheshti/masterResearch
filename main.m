@@ -15,9 +15,9 @@ end
 cvx_quiet true;
 %%
 BaseName = 'TempFile_';
-max_mcr = 5;
+max_mcr = 10;
 for mcr =1:max_mcr
-    Max_itr_i = 200;
+    Max_itr_i = 50000;
     Step_itr_i = 100;
     Min_itr_i = 100;
     it_number = floor((Max_itr_i-Min_itr_i)/Step_itr_i);
