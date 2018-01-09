@@ -15,8 +15,9 @@ end
 cvx_quiet true;
 %%
 BaseName = 'TempFile_';
-for mcr =1:5
-    Max_itr_i = 50000;
+max_mcr = 5;
+for mcr =1:max_mcr
+    Max_itr_i = 200;
     Step_itr_i = 100;
     Min_itr_i = 100;
     it_number = floor((Max_itr_i-Min_itr_i)/Step_itr_i);
@@ -68,7 +69,8 @@ for mcr =1:5
         Error_ACP(itr_i/Step_itr_i) = norm_err_ACP(end);
         clc;
         MPrc = (itr_i/Max_itr_i)*100;
-        fprintf('main pass percent: %f\n',MPrc)
+        fprintf('monte carlo progress percent: %f\n',100*mcr/max_mcr)
+        fprintf('main pass progress percent: %f\n',MPrc)
     end
     
     FileName=[BaseName,num2str(mcr)];
