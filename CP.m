@@ -1,7 +1,7 @@
 function f_CP = CP(y,A,D,tau,r)
 [m,n]= size(A);
 % Second-order cone programming 
-cvx_begin;
+cvx_begin quiet;
 variable h(n);
 minimize(norm(D'*h,1));
 subject to

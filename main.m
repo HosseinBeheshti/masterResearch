@@ -15,16 +15,17 @@ end
 cvx_quiet true;
 %%
 BaseName = 'TempFile_';
-max_mcr = 1;
+max_mcr = 5;
 for mcr =1:max_mcr
-    Max_itr_i = 50000;
-    Step_itr_i = 100;
-    Min_itr_i = 100;
-    it_number = floor((Max_itr_i-Min_itr_i)/Step_itr_i);
-    Error_CP = zeros(1,it_number);
-    Error_ACP = zeros(1,it_number);
+    Max_m = 50000;
+    Step_m = 100;
+    Min_m = 100;
+    T_it_number = floor((Max_m-Min_m)/Step_m);
+    Error_CP = zeros(1,T_it_number);
+    Error_ACP = zeros(1,T_it_number);
     
-    for itr_i=Min_itr_i:Step_itr_i:Max_itr_i
+    parfor itr_i=1:T_it_number
+        
         %%
         % define the sparse vector x
         N = 1000;                      	% size of x
@@ -43,7 +44,7 @@ for mcr =1:max_mcr
         
         %%
         % specify the random measurements to be used
-        m = itr_i;                      % number of measurements
+        m = (T_it_number-1)*Step_m+Min_m;                      % number of measurements
         A = randn(m,n);              % measurement matrix
         %% CP
         fCP_main = CP_main(D,A,f,r,r);
@@ -64,11 +65,11 @@ for mcr =1:max_mcr
         end
         norm_err_ACP = norm_err_ACP/norm(f);
         
-        Error_CP(itr_i/Step_itr_i) = err_CP;
+        Error_CP(itr_i) = err_CP;
         
-        Error_ACP(itr_i/Step_itr_i) = norm_err_ACP(end);
+        Error_ACP(itr_i) = norm_err_ACP(end);
         clc;
-        MPrc = (itr_i/Max_itr_i)*100;
+        MPrc = (itr_i/Max_m)*100;
         fprintf('monte carlo progress percent: %f\n',100*mcr/max_mcr)
         fprintf('main pass progress percent: %f\n',MPrc)
     end
@@ -79,7 +80,7 @@ end
 %% load data for average
 Error_CP_T = zeros(1,length(Error_CP));
 Error_ACP_T = zeros(1,length(Error_ACP));
-for mcr =1:5
+for mcr =1:max_mcr
     FileName=[BaseName,num2str(mcr)];
     load(FileName)
     Error_CP_T = Error_CP_T+   Error_CP;
@@ -87,12 +88,12 @@ for mcr =1:5
 end
 Error_CP_T = Error_CP_T./5;
 Error_ACP_T = Error_ACP_T./5;
-save MySimulation;
+save mysimulation;
 %% plot result
 close all;
 hold on;
-plot((Min_itr_i:Step_itr_i:Max_itr_i),10*log10(Error_CP_T),'r');
-plot((Min_itr_i:Step_itr_i:Max_itr_i),10*log10(Error_ACP_T),'b')
+plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_CP_T),'r');
+plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_ACP_T),'b')
 legend('CP','ACP')
 ylabel('Reconstruction Error (dB)')
 xlabel('measurment')
