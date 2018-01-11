@@ -1,11 +1,11 @@
-function f_ACP = ACP(y,A,D,f_estimate,tau,r)
-[m,n]= size(A);
+function f_ACP = ACP(y,A,D,phi,r)
 % Second-order cone programming 
+[m,n]= size(A);
 cvx_begin quiet;
 variable h(n);
 minimize(norm(D'*h,1));
 subject to
-y.*(A*(h-f_estimate)-tau) >= 0;
+y.*(A*h-phi) >= 0;
 norm(h,2) <= r;
 cvx_end
 
