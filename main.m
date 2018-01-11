@@ -15,7 +15,7 @@ end
 cvx_quiet true;
 %%
 BaseName = 'TempFile_';
-max_mcr = 5;
+max_mcr = 10;
 for mcr =1:max_mcr
     Max_m = 50000;
     Step_m = 100;
@@ -69,9 +69,8 @@ for mcr =1:max_mcr
         
         Error_ACP(itr_i) = norm_err_ACP(end);
         clc;
-        MPrc = (itr_i/Max_m)*100;
-        fprintf('monte carlo progress percent: %f\n',100*mcr/max_mcr)
-        fprintf('main pass progress percent: %f\n',MPrc)
+        fprintf('monte carlo iteration: %d\n',mcr)
+        fprintf('main iteration: %d\n',itr_i)
     end
     
     FileName=[BaseName,num2str(mcr)];
@@ -88,7 +87,7 @@ for mcr =1:max_mcr
 end
 Error_CP_T = Error_CP_T./max_mcr;
 Error_ACP_T = Error_ACP_T./max_mcr;
-save mysimulation;
+save('MySimulation')
 %% plot result
 close all;
 hold on;
