@@ -86,8 +86,8 @@ for mcr =1:max_mcr
     Error_CP_T = Error_CP_T+   Error_CP;
     Error_ACP_T = Error_ACP_T+   Error_ACP;
 end
-Error_CP_T = Error_CP_T./5;
-Error_ACP_T = Error_ACP_T./5;
+Error_CP_T = Error_CP_T./max_mcr;
+Error_ACP_T = Error_ACP_T./max_mcr;
 save mysimulation;
 %% plot result
 close all;

@@ -10,9 +10,6 @@ for t = 1:T
     yTemp = sign(ATemp*(f-fACP_main(:,t))-tauTemp);
     fCPTemp = ACP(yTemp,ATemp,D,fACP_main(:,t),tauTemp,th_var);
     fACP_main(:,t+1) = fCPTemp;
-    % waitbar
-    perc = (t/T)*100;
-    fprintf('fACP_main pass percent: %f\n',perc)
     %% visiual adaptivity
     if n==2
         if t== 1
