@@ -26,7 +26,7 @@ for mcr =1:max_mcr
     Error_ACP = zeros(1,T_it_number);
     
     parfor itr_i=1:T_it_number
-        %%
+        %% Generate signal
         % define the sparse vector x
         N = 1000;                      	% size of x
         s = 10;                         % sparsity of x
@@ -36,8 +36,7 @@ for mcr =1:max_mcr
         
         % Generate dictionary
         n = 50;                         % number of dictionary rows
-        DType = 'Rl';                 	% dictionary type /in {ODFT}
-        D = DictionaryGenerator(n,N,DType);
+        D = DictionaryGenerator(n,N);
         f = D*x;
         r = 2*norm(f);                    % an (over)estimation of the magnitude of f
         

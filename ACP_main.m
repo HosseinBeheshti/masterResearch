@@ -1,11 +1,10 @@
 function fACP_main = ACP_main(D,A,f,r,T)
 % Adaptive second-order cone programming 
 [m,n]= size(A);
-DitherType = 'CP';
 fACP_main= zeros(n,T+1);
 for t = 1:T
     ATemp = A((t-1)*m/T+1:t*m/T,:);
-    tauTemp = DitherGenerator(m/T,(2)^(1-t).*r,DitherType);
+    tauTemp = DitherGenerator(m/T,(2)^(1-t).*r);
     phiTemp = ATemp*(fACP_main(:,t))+tauTemp;
     yTemp = sign(ATemp*f-phiTemp);
     fCPTemp = ACP(yTemp,ATemp,D,phiTemp,r);
