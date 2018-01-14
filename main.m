@@ -86,6 +86,6 @@ plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_CP_T),'r');
 plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_ACP_T),'b')
 legend('CP','ACP')
 ylabel('Reconstruction Error (dB)')
-xlabel('measurment')
+xlabel('measurments')
 hold off;
 toc
