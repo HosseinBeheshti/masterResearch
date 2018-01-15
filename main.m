@@ -29,7 +29,7 @@ for mcr =1:max_mcr
         %% Generate signal
         % define the sparse vector x
         N = 1000;                      	% size of x
-        s = 20;                         % sparsity of x
+        s = 30;                         % sparsity of x
         supp = sort(randsample(N,s));   % support of x
         x = zeros(N,1);
         x(supp) = randn(s,1);       	% entries of x on its support
