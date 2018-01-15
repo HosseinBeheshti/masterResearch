@@ -29,7 +29,7 @@ for mcr =1:max_mcr
         %% Generate signal
         % define the sparse vector x
         N = 1000;                      	% size of x
-        s = 10;                         % sparsity of x
+        s = 20;                         % sparsity of x
         supp = sort(randsample(N,s));   % support of x
         x = zeros(N,1);
         x(supp) = randn(s,1);       	% entries of x on its support
@@ -77,7 +77,7 @@ for mcr =1:max_mcr
 end
 Error_CP_T = Error_CP_T./max_mcr;
 Error_ACP_T = Error_ACP_T./max_mcr;
-save('MySimulation')
+save('simulation_result')
 
 %% plot result
 close all;
@@ -88,4 +88,5 @@ legend('CP','ACP')
 ylabel('Reconstruction Error (dB)')
 xlabel('measurments')
 hold off;
+%%
 toc
