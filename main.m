@@ -18,24 +18,31 @@ cvx_quiet true;
 Max_s = 30;
 Step_s = 10;
 Min_s = 10;
+%% monte carlo
+max_mcr = 1;
+%% number of measurements
+Max_m = 20000;
+Step_m = 200;
+Min_m = 100;
+T_it_number = floor((Max_m-Min_m)/Step_m)+1;
+%% allocate vectors
+Error_CP = zeros(1,T_it_number);
+Error_ACP = zeros(1,T_it_number);
+Error_CP_T = zeros(1,length(Error_CP));
+Error_ACP_T = zeros(1,length(Error_ACP));
+%% file name
+TempName = 'TempFile_';
 SimFileName = 'SimResult';
+%% 
 for sprst=Min_s:Step_s:Max_s
-    %% monte carlo
-    TempName = 'TempFile_';
-    max_mcr = 1;
+    
     for mcr =1:max_mcr
-        Max_m = 50000;
-        Step_m = 100;
-        Min_m = 100;
-        T_it_number = floor((Max_m-Min_m)/Step_m)+1;
-        Error_CP = zeros(1,T_it_number);
-        Error_ACP = zeros(1,T_it_number);
         
         parfor itr_i=1:T_it_number
             %% Generate signal
             % define the sparse vector x
             N = 1000;                      	% size of x
-            s = sprst;                         % sparsity of x
+            s = sprst;                      % sparsity of x
             supp = sort(randsample(N,s));   % support of x
             x = zeros(N,1);
             x(supp) = randn(s,1);       	% entries of x on its support
@@ -73,8 +80,7 @@ for sprst=Min_s:Step_s:Max_s
     end
     
     %% Compute data average
-    Error_CP_T = zeros(1,length(Error_CP));
-    Error_ACP_T = zeros(1,length(Error_ACP));
+    
     for mcr =1:max_mcr
         FileName=[TempName,num2str(mcr)];
         load(FileName)
@@ -107,10 +113,17 @@ end
 %% plot result
 close all;
 hold all;
+legendInfo = cell(1,2*s_it);
 for s_it=1:T_s_it_number
     plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_CP_r(s_it,:)));
-    plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_ACP_r(s_it,:)))
+    legendInfo{s_it} = ['CP s = ' num2str((s_it-1)*Step_s+Min_s)];
 end
+for s_it=1:T_s_it_number
+    plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_ACP_r(s_it,:)));
+    legendInfo{s_it+T_s_it_number} = ['ACP s = ' num2str((s_it-1)*Step_s+Min_s)];
+end
+
+legend(legendInfo)
 ylabel('Reconstruction Error (dB)')
 xlabel('measurments')
 
