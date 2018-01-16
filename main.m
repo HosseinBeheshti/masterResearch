@@ -15,14 +15,14 @@ if ispc
 end
 cvx_quiet true;
 %% sparsity level
-Max_s = 30;
+Max_s = 100;
 Step_s = 10;
 Min_s = 10;
 %% monte carlo
-max_mcr = 1;
+max_mcr = 50;
 %% number of measurements
 Max_m = 20000;
-Step_m = 200;
+Step_m = 100;
 Min_m = 100;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
