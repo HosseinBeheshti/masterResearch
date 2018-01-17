@@ -71,8 +71,9 @@ for sprst=Min_s:Step_s:Max_s
             Error_CP(itr_i) = err_CP;
             Error_ACP(itr_i) = err_ACP;
             
-            fprintf('monte carlo iteration: %d\n',mcr)
-            fprintf('main iteration: %d\n',itr_i)
+            fprintf('monte carlo : %d\n',mcr)
+            fprintf('measurements: %d\n',itr_i)
+            fprintf('sparsity: %d\n',s)
         end
         
         FileName=[TempName,num2str(mcr)];
