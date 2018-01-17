@@ -14,10 +14,6 @@ if ispc
     cd ..
 end
 cvx_quiet true;
-%% sparsity level
-Max_s = 100;
-Step_s = 10;
-Min_s = 10;
 %% monte carlo
 max_mcr = 50;
 %% number of measurements
@@ -33,67 +29,65 @@ Error_ACP_T = zeros(1,length(Error_ACP));
 %% file name
 TempName = 'TempFile_';
 SimFileName = 'SimResult';
-%% 
-for sprst=Min_s:Step_s:Max_s
+%%
+
+for mcr =1:max_mcr
     
-    for mcr =1:max_mcr
+    parfor itr_i=1:T_it_number
+        %% Generate signal
+        % define the sparse vector x
+        N = 1000;                      	% size of x
+        s = 10;                      % sparsity of x
+        supp = sort(randsample(N,s));   % support of x
+        x = zeros(N,1);
+        x(supp) = randn(s,1);       	% entries of x on its support
         
-        parfor itr_i=1:T_it_number
-            %% Generate signal
-            % define the sparse vector x
-            N = 1000;                      	% size of x
-            s = sprst;                      % sparsity of x
-            supp = sort(randsample(N,s));   % support of x
-            x = zeros(N,1);
-            x(supp) = randn(s,1);       	% entries of x on its support
-            
-            % Generate dictionary
-            n = 50;                         % number of dictionary rows
-            D = DictionaryGenerator(n,N);
-            f = D*x;
-            r = 2*norm(f);                    % an (over)estimation of the magnitude of f
-            
-            % specify the random measurements to be used
-            m = (itr_i-1)*Step_m+Min_m;     % number of measurements
-            A = randn(m,n);                 % measurement matrix
-            
-            %% CP
-            fCP_main = CP_main(D,A,f,r,r);
-            
-            %% Adaptive CP
-            T = 10; % number of batch
-            fACP_main = ACP_main(D,A,f,r,T);
-            
-            %% Compute error
-            err_CP = norm(fCP_main-f)/norm(f);
-            err_ACP = norm(fACP_main(:,end)-f)/norm(f);
-            
-            Error_CP(itr_i) = err_CP;
-            Error_ACP(itr_i) = err_ACP;
-            
-            fprintf('monte carlo : %d\n',mcr)
-            fprintf('measurements: %d\n',itr_i)
-            fprintf('sparsity: %d\n',s)
-        end
+        % Generate dictionary
+        n = 50;                         % number of dictionary rows
+        D = DictionaryGenerator(n,N);
+        f = D*x;
+        r = 2*norm(f);                    % an (over)estimation of the magnitude of f
         
-        FileName=[TempName,num2str(mcr)];
-        save(FileName)
+        % specify the random measurements to be used
+        m = (itr_i-1)*Step_m+Min_m;     % number of measurements
+        A = randn(m,n);                 % measurement matrix
+        
+        %% CP
+        fCP_main = CP_main(D,A,f,r,r);
+        
+        %% Adaptive CP
+        T = 10; % number of batch
+        fACP_main = ACP_main(D,A,f,r,T);
+        
+        %% Compute error
+        err_CP = norm(fCP_main-f)/norm(f);
+        err_ACP = norm(fACP_main(:,end)-f)/norm(f);
+        
+        Error_CP(itr_i) = err_CP;
+        Error_ACP(itr_i) = err_ACP;
+        
+        fprintf('monte carlo : %d\n',mcr)
+        fprintf('measurements: %d\n',itr_i)
     end
     
-    %% Compute data average
-    
-    for mcr =1:max_mcr
-        FileName=[TempName,num2str(mcr)];
-        load(FileName)
-        Error_CP_T = Error_CP_T+Error_CP;
-        Error_ACP_T = Error_ACP_T+Error_ACP;
-    end
-    Error_CP_T = Error_CP_T./max_mcr;
-    Error_ACP_T = Error_ACP_T./max_mcr;
-    
-    SimName=[SimFileName,'_N=',num2str(1000),'_n=',num2str(50),'_s=',num2str(sprst)];
-    save(SimName)
+    FileName=[TempName,num2str(mcr)];
+    save(FileName)
 end
+
+%% Compute data average
+
+for mcr =1:max_mcr
+    FileName=[TempName,num2str(mcr)];
+    load(FileName)
+    Error_CP_T = Error_CP_T+Error_CP;
+    Error_ACP_T = Error_ACP_T+Error_ACP;
+end
+Error_CP_T = Error_CP_T./max_mcr;
+Error_ACP_T = Error_ACP_T./max_mcr;
+
+SimName=[SimFileName,'_N=',num2str(1000),'_n=',num2str(50),'_s=',num2str(10)];
+save(SimName)
+
 %% remove temporary file
 for mcr =1:max_mcr
     FileName=[TempName,num2str(mcr)];
