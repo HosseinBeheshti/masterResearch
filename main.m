@@ -32,7 +32,6 @@ SimFileName = 'SimResult';
 %%
 
 for mcr =1:max_mcr
-    
     parfor itr_i=1:T_it_number
         %% Generate signal
         % define the sparse vector x
@@ -93,35 +92,15 @@ for mcr =1:max_mcr
     FileName=[TempName,num2str(mcr)];
     delete Temp*
 end
-%% load data
-T_s_it_number = floor((Max_s-Min_s)/Step_s)+1;
-Error_CP_r = zeros(T_s_it_number,length(Error_CP));
-Error_ACP_r = zeros(T_s_it_number,length(Error_ACP));
-
-for s_it=1:T_s_it_number
-    SimName=[SimFileName,'_N=',num2str(1000),'_n=',num2str(50),'_s=',num2str((s_it-1)*Step_s+Min_s)];
-    load(SimName)
-    Error_CP_r(s_it,:)= Error_CP_T;
-    Error_ACP_r(s_it,:)= Error_ACP_T;
-end
-
 %% plot result
 close all;
-hold all;
-legendInfo = cell(1,2*s_it);
-for s_it=1:T_s_it_number
-    plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_CP_r(s_it,:)));
-    legendInfo{s_it} = ['CP s = ' num2str((s_it-1)*Step_s+Min_s)];
-end
-for s_it=1:T_s_it_number
-    plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_ACP_r(s_it,:)));
-    legendInfo{s_it+T_s_it_number} = ['ACP s = ' num2str((s_it-1)*Step_s+Min_s)];
-end
-
-legend(legendInfo)
+hold on;
+plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_CP_T),'r');
+plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_ACP_T),'b')
+legend('CP','ACP')
 ylabel('Reconstruction Error (dB)')
-xlabel('measurments')
-
+xlabel('measurment')
 hold off;
 %%
 toc
+
