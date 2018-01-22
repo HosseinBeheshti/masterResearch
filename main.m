@@ -24,13 +24,10 @@ T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
 Error_CP = zeros(1,T_it_number);
 Error_ACP = zeros(1,T_it_number);
-Error_CP_T = zeros(1,length(Error_CP));
-Error_ACP_T = zeros(1,length(Error_ACP));
 %% file name
 TempName = 'TempFile_';
 SimFileName = 'SimResult';
 %%
-
 for mcr =1:max_mcr
     parfor itr_i=1:T_it_number
         %% Generate signal
@@ -74,7 +71,8 @@ for mcr =1:max_mcr
 end
 
 %% Compute data average
-
+Error_CP_T = zeros(1,length(Error_CP));
+Error_ACP_T = zeros(1,length(Error_ACP));
 for mcr =1:max_mcr
     FileName=[TempName,num2str(mcr)];
     load(FileName)
