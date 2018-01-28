@@ -28,12 +28,12 @@ Error_ACP = zeros(1,T_it_number);
 TempName = 'TempFile_';
 SimFileName = 'SimResult';
 %%
-for mcr =1:max_mcr
+for mcr = 1:max_mcr
     parfor itr_i=1:T_it_number
         %% Generate signal
         % define the sparse vector x
         N = 1000;                      	% size of x
-        s = 30;                      % sparsity of x
+        s = 50;                      % sparsity of x
         supp = sort(randsample(N,s));   % support of x
         x = zeros(N,1);
         x(supp) = randn(s,1);       	% entries of x on its support
@@ -82,7 +82,7 @@ end
 Error_CP_T = Error_CP_T./max_mcr;
 Error_ACP_T = Error_ACP_T./max_mcr;
 
-SimName=[SimFileName,'_N=',num2str(1000),'_n=',num2str(50),'_s=',num2str(30)];
+SimName=[SimFileName,'_N=',num2str(1000),'_n=',num2str(50),'_s=',num2str(50)];
 save(SimName)
 
 %% remove temporary file
