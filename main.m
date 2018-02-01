@@ -33,7 +33,7 @@ for mcr = 1:max_mcr
         %% Generate signal
         % define the sparse vector x
         N = 1000;                      	% size of x
-        s = 50;                      % sparsity of x
+        s = 10;                      % sparsity of x
         supp = sort(randsample(N,s));   % support of x
         x = zeros(N,1);
         x(supp) = randn(s,1);       	% entries of x on its support
@@ -52,7 +52,7 @@ for mcr = 1:max_mcr
         fCP_main = CP_main(D,A,f,r,r);
         
         %% Adaptive CP
-        T = 10; % number of batch
+        T = 50; % number of batch
         fACP_main = ACP_main(D,A,f,r,T);
         
         %% Compute error
@@ -82,7 +82,7 @@ end
 Error_CP_T = Error_CP_T./max_mcr;
 Error_ACP_T = Error_ACP_T./max_mcr;
 
-SimName=[SimFileName,'_N=',num2str(1000),'_n=',num2str(50),'_s=',num2str(50)];
+SimName=[SimFileName,'_N=',num2str(1000),'_n=',num2str(50),'_s=',num2str(50),'_T=',num2str(50)];
 save(SimName)
 
 %% remove temporary file
