@@ -5,9 +5,8 @@ fACP_main= zeros(n,T+1);
 for t = 1:T
     ATemp = A((t-1)*m/T+1:t*m/T,:);
     tauTemp = DitherGenerator(m/T,(2)^(1-t).*r);
-    phiTemp = ATemp*(fACP_main(:,t))+tauTemp;
-    yTemp = sign(ATemp*f-phiTemp);
-    fCPTemp = ACP(yTemp,ATemp,D,phiTemp,r);
+    yTemp = sign(ATemp*(f-fACP_main(:,t))-tauTemp);
+    fCPTemp = ACP(yTemp,ATemp,D,fACP_main(:,t),tauTemp,(2)^(1-t).*r);
     fACP_main(:,t+1) = fCPTemp;
     %% visiual adaptivity
     if n==2

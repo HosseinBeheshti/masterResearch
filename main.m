@@ -15,11 +15,11 @@ if ispc
 end
 cvx_quiet true;
 %% monte carlo
-max_mcr = 50;
+max_mcr = 1;
 %% number of measurements
 Max_m = 20000;
-Step_m = 100;
-Min_m = 100;
+Step_m = 1000;
+Min_m = 1000;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
 Error_CP = zeros(1,T_it_number);
@@ -52,7 +52,7 @@ for mcr = 1:max_mcr
         fCP_main = CP_main(D,A,f,r,r);
         
         %% Adaptive CP
-        T = 50; % number of batch
+        T = 10; % number of batch
         fACP_main = ACP_main(D,A,f,r,T);
         
         %% Compute error
@@ -82,7 +82,7 @@ end
 Error_CP_T = Error_CP_T./max_mcr;
 Error_ACP_T = Error_ACP_T./max_mcr;
 
-SimName=[SimFileName,'_N=',num2str(1000),'_n=',num2str(50),'_s=',num2str(50),'_T=',num2str(50)];
+SimName=[SimFileName,'_N=',num2str(1000),'_n=',num2str(50),'_s=',num2str(10),'_T=',num2str(10)];
 save(SimName)
 
 %% remove temporary file
