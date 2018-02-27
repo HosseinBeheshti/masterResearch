@@ -18,8 +18,8 @@ cvx_quiet true;
 max_mcr = 1;
 %% number of measurements
 Max_m = 20000;
-Step_m = 1000;
-Min_m = 1000;
+Step_m = 100;
+Min_m = 100;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
 Error_CP = zeros(1,T_it_number);
@@ -82,7 +82,7 @@ end
 Error_CP_T = Error_CP_T./max_mcr;
 Error_ACP_T = Error_ACP_T./max_mcr;
 
-SimName=[SimFileName,'_N=',num2str(1000),'_n=',num2str(50),'_s=',num2str(10),'_T=',num2str(10)];
+SimName=[SimFileName,'_N=',num2str(1000),'_n=',num2str(100),'_s=',num2str(10),'_T=',num2str(10)];
 save(SimName)
 
 %% remove temporary file

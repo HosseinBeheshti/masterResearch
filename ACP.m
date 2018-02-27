@@ -3,7 +3,7 @@ function f_ACP = ACP(y,A,D,fACP,tau,r)
 [m,n]= size(A);
 cvx_begin quiet;
 variable h(n);
-minimize(norm(D'*h,1));
+minimize(norm(D'*(h-fACP),1));
 subject to
 y.*(A*h-A*fACP-tau) >= 0;
 norm(h-fACP,2) <= r;
