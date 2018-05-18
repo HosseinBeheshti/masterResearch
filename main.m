@@ -15,9 +15,9 @@ if ispc
 end
 cvx_quiet true;
 %% monte carlo
-max_mcr = 10;
+max_mcr = 50;
 %% number of measurements
-Max_m = 10000;
+Max_m = 20000;
 Step_m = 500;
 Min_m = 100;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
@@ -105,11 +105,11 @@ plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_LP_T),'DisplayName','LP',
     'Color',[0 1 0],'LineWidth',1.5);
 plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_CP_T),'DisplayName','CP','Marker','diamond','LineStyle','--',...
     'Color',[1 0 0],'LineWidth',1.5);
-plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_ACP_T),'DisplayName','Our algorithm','Marker','*',...
+plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_ACP_T),'DisplayName','Our algorithm','Marker','square',...
     'Color',[0 0 1],'LineWidth',1.5);
-legend('CP','ACP')
-ylabel('Reconstruction Error (dB)')
-xlabel('measurment')
+legend('LP','CP','Our algorithm')
+ylabel('Nomalized reconstruction error (dB)')
+xlabel('Number of measurments')
 hold off;
 TikzName=['Tikz-',datestr(now, 'dd-mmm-yyyy'),'.tex'];
 matlab2tikz(TikzName)

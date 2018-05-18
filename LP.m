@@ -1,7 +1,7 @@
 function fLP = LP(y,A,D,sigma,tau)
 % This is the implementation of the algorithm based on linear programming
 [m,n]= size(A);
-cvx_begin;
+cvx_begin quiet;
 variable h(n);
 variable u;
 minimize(norm(D'*h,1)+abs(u));
