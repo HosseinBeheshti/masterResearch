@@ -32,3 +32,4 @@ ylabel('Reconstruction Error (dB)')
 xlabel('measurments')
 
 hold off;
+matlab2tikz('TikzFig.tex')

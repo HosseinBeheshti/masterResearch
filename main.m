@@ -15,7 +15,7 @@ if ispc
 end
 cvx_quiet true;
 %% monte carlo
-max_mcr = 1;
+max_mcr = 10;
 %% number of measurements
 Max_m = 20000;
 Step_m = 100;
