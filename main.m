@@ -17,11 +17,12 @@ cvx_quiet true;
 %% monte carlo
 max_mcr = 10;
 %% number of measurements
-Max_m = 20000;
-Step_m = 100;
+Max_m = 10000;
+Step_m = 500;
 Min_m = 100;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
+Error_LP = zeros(1,T_it_number);
 Error_CP = zeros(1,T_it_number);
 Error_ACP = zeros(1,T_it_number);
 %% file name
@@ -47,7 +48,10 @@ for mcr = 1:max_mcr
         % specify the random measurements to be used
         m = (itr_i-1)*Step_m+Min_m;     % number of measurements
         A = randn(m,n);                 % measurement matrix
-        
+ 
+        %% LP
+        fLP_main = LP_main(D,A,f,r);
+		
         %% CP
         fCP_main = CP_main(D,A,f,r,r);
         
@@ -56,9 +60,10 @@ for mcr = 1:max_mcr
         fACP_main = ACP_main(D,A,f,r,T);
         
         %% Compute error
+        err_LP = norm(fLP_main-f)/norm(f);
         err_CP = norm(fCP_main-f)/norm(f);
         err_ACP = norm(fACP_main(:,end)-f)/norm(f);
-        
+        Error_LP(itr_i) = err_LP;
         Error_CP(itr_i) = err_CP;
         Error_ACP(itr_i) = err_ACP;
         
@@ -71,14 +76,17 @@ for mcr = 1:max_mcr
 end
 
 %% Compute data average
+Error_LP_T = zeros(1,length(Error_LP));
 Error_CP_T = zeros(1,length(Error_CP));
 Error_ACP_T = zeros(1,length(Error_ACP));
 for mcr =1:max_mcr
     FileName=[TempName,num2str(mcr)];
     load(FileName)
+    Error_LP_T = Error_LP_T+Error_LP;    
     Error_CP_T = Error_CP_T+Error_CP;
     Error_ACP_T = Error_ACP_T+Error_ACP;
 end
+Error_LP_T = Error_LP_T./max_mcr;
 Error_CP_T = Error_CP_T./max_mcr;
 Error_ACP_T = Error_ACP_T./max_mcr;
 
@@ -93,12 +101,18 @@ end
 %% plot result
 close all;
 hold on;
-plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_CP_T),'r');
-plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_ACP_T),'b')
+plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_LP_T),'DisplayName','LP','Marker','o','LineStyle','-.',...
+    'Color',[0 1 0],'LineWidth',1.5);
+plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_CP_T),'DisplayName','CP','Marker','diamond','LineStyle','--',...
+    'Color',[1 0 0],'LineWidth',1.5);
+plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_ACP_T),'DisplayName','Our algorithm','Marker','*',...
+    'Color',[0 0 1],'LineWidth',1.5);
 legend('CP','ACP')
 ylabel('Reconstruction Error (dB)')
 xlabel('measurment')
 hold off;
+TikzName=['Tikz-',datestr(now, 'dd-mmm-yyyy'),'.tex'];
+matlab2tikz(TikzName)
 %%
 toc
 
