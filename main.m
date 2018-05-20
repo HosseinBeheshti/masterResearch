@@ -79,7 +79,7 @@ end
 Error_LP_T = zeros(1,length(Error_LP));
 Error_CP_T = zeros(1,length(Error_CP));
 Error_ACP_T = zeros(1,length(Error_ACP));
-for mcr =1:max_mcr
+for mcr =1:41
     FileName=[TempName,num2str(mcr)];
     load(FileName)
     Error_LP_T = Error_LP_T+Error_LP;    
@@ -100,6 +100,7 @@ for mcr =1:max_mcr
 end
 %% plot result
 close all;
+load('SimResult_N=1000_n=100_s=10_T=10');
 hold on;
 plot(((0:(T_it_number-1))*Step_m+Min_m),10*log10(Error_LP_T),'DisplayName','LP','Marker','*','LineStyle','-.',...
     'Color',[0 0.5 0],'LineWidth',1.5);
