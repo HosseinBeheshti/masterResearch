@@ -79,7 +79,7 @@ end
 Error_LP_T = zeros(1,length(Error_LP));
 Error_CP_T = zeros(1,length(Error_CP));
 Error_ACP_T = zeros(1,length(Error_ACP));
-for mcr =1:41
+for mcr =1:max_mcr
     FileName=[TempName,num2str(mcr)];
     load(FileName)
     Error_LP_T = Error_LP_T+Error_LP;    
