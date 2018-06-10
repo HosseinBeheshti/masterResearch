@@ -1,0 +1,76 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=10000,
+xmax=20000,
+xlabel style={font=\color{white!15!black}},
+xlabel={Number of measurments},
+ymin=-70,
+ymax=-10,
+ylabel style={font=\color{white!15!black}},
+ylabel={Nomalized reconstruction error (dB)},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=black!50!green, dashdotted, line width=1.5pt, mark=asterisk, mark options={solid, black!50!green}]
+  table[row sep=crcr]{%
+10000	-13.3275391465828\\
+11000	-14.8238946836488\\
+12000	-13.9947927530559\\
+13000	-14.5520096824012\\
+14000	-16.5203858295894\\
+15000	-16.1591271945714\\
+16000	-16.1791068758549\\
+17000	-18.8572658783496\\
+18000	-17.1910828894113\\
+19000	-16.3762649977809\\
+20000	-15.9194559837767\\
+};
+\addlegendentry{LP}
+
+\addplot [color=red, dashed, line width=1.5pt, mark=diamond, mark options={solid, red}]
+  table[row sep=crcr]{%
+10000	-13.0311808968389\\
+11000	-16.0038221813239\\
+12000	-13.9383039959978\\
+13000	-14.9429491752606\\
+14000	-16.370952013857\\
+15000	-16.3049996111956\\
+16000	-14.6683311693318\\
+17000	-17.7244049761321\\
+18000	-15.6602670683243\\
+19000	-16.2628175181179\\
+20000	-14.98535034191\\
+};
+\addlegendentry{CP}
+
+\addplot [color=blue, line width=1.5pt, mark=square, mark options={solid, blue}]
+  table[row sep=crcr]{%
+10000	-63.0870026593087\\
+11000	-64.9866761270881\\
+12000	-65.9087191842212\\
+13000	-66.1718661185794\\
+14000	-66.1907916244602\\
+15000	-66.088969232954\\
+16000	-65.4853514578435\\
+17000	-67.1976814423627\\
+18000	-67.5157431023189\\
+19000	-67.1018146217165\\
+20000	-66.1820230259533\\
+};
+\addlegendentry{Our algorithm}
+
+\end{axis}
+\end{tikzpicture}%
