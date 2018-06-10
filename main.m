@@ -18,7 +18,7 @@ cvx_quiet true;
 max_mcr = 1;
 %% number of measurements
 Max_m = 20000;
-Step_m = 500;
+Step_m = 1000;
 Min_m = 10000;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
