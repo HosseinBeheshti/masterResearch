@@ -15,11 +15,11 @@ if ispc
 end
 cvx_quiet true;
 %% monte carlo
-max_mcr = 100;
+max_mcr = 1;
 %% number of measurements
 Max_m = 20000;
 Step_m = 500;
-Min_m = 100;
+Min_m = 10000;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
 Error_LP = zeros(1,T_it_number);
