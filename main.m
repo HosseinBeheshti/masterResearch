@@ -17,9 +17,9 @@ cvx_quiet true;
 %% monte carlo
 max_mcr = 1;
 %% number of measurements
-Max_m = 20000;
-Step_m = 1000;
-Min_m = 10000;
+Max_m = 300;
+Step_m = 100;
+Min_m = 100;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
 Error_LP = zeros(1,T_it_number);
@@ -30,7 +30,7 @@ TempName = 'TempFile_';
 SimFileName = 'SimResult';
 %%
 for mcr = 1:max_mcr
-    parfor itr_i=1:T_it_number
+    for itr_i=1:T_it_number
         %% Generate signal
         % define the sparse vector x
         N = 1000;                      	% size of x
@@ -40,7 +40,7 @@ for mcr = 1:max_mcr
         x(supp) = randn(s,1);       	% entries of x on its support
         
         % Generate dictionary
-        n = 50;                         % number of dictionary rows
+        n = 3;                         % number of dictionary rows
         D = DictionaryGenerator(n,N);
         f = D*x;
         r = 2*norm(f);                    % an (over)estimation of the magnitude of f
@@ -56,7 +56,7 @@ for mcr = 1:max_mcr
         fCP_main = CP_main(D,A,f,r,r);
         
         %% Adaptive CP
-        T = 10; % number of batch
+        T = 2; % number of batch
         fACP_main = ACP_main(D,A,f,r,T);
         
         %% Compute error

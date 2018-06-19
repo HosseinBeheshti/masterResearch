@@ -1,5 +1,5 @@
 function fACP_main = ACP_main(D,A,f,r,T)
-% Adaptive second-order cone programming 
+% Adaptive second-order cone programming
 [m,n]= size(A);
 fACP_main= zeros(n,T+1);
 for t = 1:T
@@ -19,6 +19,22 @@ for t = 1:T
         if t== T
             hold off;
         end
+    end
+    if n==3
+        ply_nrml    = -yTemp.*ATemp;
+        ply_ofst    = -yTemp.*tauTemp;
+        
+        current_Polyhedron = Polyhedron(ply_nrml,ply_ofst);
+        
+        ply_nrml = current_Polyhedron.H(:,(1:end-1));
+        ply_ofst = current_Polyhedron.H(:,end);
+        
+        hold on;
+        plot(current_Polyhedron,'color','blue','alpha',0.2);
+        if t== T
+            hold off;
+        end
+        
     end
 end
 end
