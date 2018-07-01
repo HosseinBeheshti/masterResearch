@@ -1,0 +1,55 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=10000,
+xmax=25000,
+xlabel style={font=\color{white!15!black}},
+xlabel={Number of measurments},
+ymin=-90,
+ymax=-10,
+ylabel style={font=\color{white!15!black}},
+ylabel={Nomalized reconstruction error (dB)},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=black!50!green, dashdotted, line width=1.5pt, mark=asterisk, mark options={solid, black!50!green}]
+  table[row sep=crcr]{%
+10000	-13.3275391465828\\
+15000	-16.0067662474009\\
+20000	-18.6974792537979\\
+25000	-17.3483882522247\\
+};
+\addlegendentry{LP}
+
+\addplot [color=red, dashed, line width=1.5pt, mark=diamond, mark options={solid, red}]
+  table[row sep=crcr]{%
+10000	-13.0311808968389\\
+15000	-13.9695336342057\\
+20000	-16.0828447629284\\
+25000	-16.5788403055203\\
+};
+\addlegendentry{CP}
+
+\addplot [color=blue, line width=1.5pt, mark=square, mark options={solid, blue}]
+  table[row sep=crcr]{%
+10000	-16.9197923008675\\
+15000	-25.7045541728639\\
+20000	-86.579850740922\\
+25000	-86.5317795897627\\
+};
+\addlegendentry{Our algorithm}
+
+\end{axis}
+\end{tikzpicture}%

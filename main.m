@@ -17,9 +17,9 @@ cvx_quiet true;
 %% monte carlo
 max_mcr = 1;
 %% number of measurements
-Max_m = 300;
-Step_m = 100;
-Min_m = 100;
+Max_m = 25000;
+Step_m = 5000;
+Min_m = 10000;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
 Error_LP = zeros(1,T_it_number);
@@ -30,7 +30,7 @@ TempName = 'TempFile_';
 SimFileName = 'SimResult';
 %%
 for mcr = 1:max_mcr
-    for itr_i=1:T_it_number
+    parfor itr_i=1:T_it_number
         %% Generate signal
         % define the sparse vector x
         N = 1000;                      	% size of x
@@ -40,10 +40,10 @@ for mcr = 1:max_mcr
         x(supp) = randn(s,1);       	% entries of x on its support
         
         % Generate dictionary
-        n = 3;                         % number of dictionary rows
+        n = 50;                         % number of dictionary rows
         D = DictionaryGenerator(n,N);
         f = D*x;
-        r = 2*norm(f);                    % an (over)estimation of the magnitude of f
+        r = 2*norm(f);                  % an (over)estimation of the magnitude of f
         
         % specify the random measurements to be used
         m = (itr_i-1)*Step_m+Min_m;     % number of measurements
@@ -56,13 +56,14 @@ for mcr = 1:max_mcr
         fCP_main = CP_main(D,A,f,r,r);
         
         %% Adaptive CP
-        T = 2; % number of batch
+        T = 10; % number of batch
         fACP_main = ACP_main(D,A,f,r,T);
         
         %% Compute error
         err_LP = norm(fLP_main-f)/norm(f);
         err_CP = norm(fCP_main-f)/norm(f);
         err_ACP = norm(fACP_main(:,end)-f)/norm(f);
+        
         Error_LP(itr_i) = err_LP;
         Error_CP(itr_i) = err_CP;
         Error_ACP(itr_i) = err_ACP;

@@ -4,9 +4,9 @@ function fACP_main = ACP_main(D,A,f,r,T)
 fACP_main= zeros(n,T+1);
 for t = 1:T
     ATemp = A((t-1)*m/T+1:t*m/T,:);
-    tauTemp = DitherGenerator(m/T,(2)^(-t).*r);
+    tauTemp = DitherGenerator(m/T,(2)^(-t).*r/t);
     yTemp = sign(ATemp*(f-fACP_main(:,t))-tauTemp);
-    fCPTemp = fACP_main(:,t)+ACP(yTemp,ATemp,D,tauTemp,(2)^(-t).*r);
+    fCPTemp = fACP_main(:,t)+ACP(yTemp,ATemp,D,tauTemp,(2)^(-t).*r/t);
     fACP_main(:,t+1) = fCPTemp;
     %% visiual adaptivity
     if n==2
