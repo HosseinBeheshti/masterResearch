@@ -1,14 +1,12 @@
 clear;
 clc;
 close all;
+tic;
 %% monte carlo
-max_mcr = 100;
-%% Initialize progress bar:
-disp("start simulation");
-upd = textprogressbar(max_mcr);
+max_mcr = 200;
 %% number of measurements
-Max_m = 25000;
-Step_m = 1000;
+Max_m = 30000;
+Step_m = 2000;
 Min_m = 100;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
@@ -23,7 +21,8 @@ N = 1000; % size of x
 s = 10; % sparsity of x
 n = 50; % number of dictionary rows
 T = 10; % number of batch
-%% monte_carlo loop
+%%
+disp("start simulation");
 for mcr = 1:max_mcr
     parfor itr_i=1:T_it_number
         %% Generate signal
@@ -31,29 +30,38 @@ for mcr = 1:max_mcr
         supp = sort(randsample(N,s));   % support of x
         x = zeros(N,1);
         x(supp) = randn(s,1);       	% entries of x on its support
+        
         % Generate dictionary
         D = DictionaryGenerator(n,N);
         f = D*x;
         r = 2*norm(f);                  % an (over)estimation of the magnitude of f
+        
         % specify the random measurements to be used
         m = (itr_i-1)*Step_m+Min_m;     % number of measurements
         A = randn(m,n);                 % measurement matrix
+        
         %% LP
         fLP_main = LP_main(D,A,f,r);
+        
         %% CP
         fCP_main = CP_main(D,A,f,r,r);
+        
         %% Adaptive CP
         fACP_main = ACP_main(D,A,f,r,T);
+        
         %% Compute error
         err_LP = norm(fLP_main-f)/norm(f);
         err_CP = norm(fCP_main-f)/norm(f);
         err_ACP = norm(fACP_main(:,end)-f)/norm(f);
+        
         Error_LP(itr_i) = err_LP;
         Error_CP(itr_i) = err_CP;
         Error_ACP(itr_i) = err_ACP;
+        
+        fprintf('monte carlo : %d\n',mcr)
+        fprintf('measurements: %d\n',itr_i)
     end
-    % Update progress bar:
-    upd(mcr);
+    
     FileName=[TempName,num2str(mcr)];
     save(FileName)
 end
@@ -72,8 +80,10 @@ end
 Error_LP_T = Error_LP_T./max_mcr;
 Error_CP_T = Error_CP_T./max_mcr;
 Error_ACP_T = Error_ACP_T./max_mcr;
-SimName=[SimFileName,'_N=',num2str(N),'_n=',num2str(n),'_s=',num2str(s),'_T=',num2str(T)];
-save(SimName);
+
+SimName=[SimFileName,'_N=',num2str(N),'_n=',num2str(n),'_s=',num2str(s),'_T=',num2str(T),'_montecarlo_itr=',num2str(max_mcr)];
+save(SimName)
+
 %% remove temporary file
 for mcr =1:max_mcr
     FileName=[TempName,num2str(mcr)];
@@ -96,4 +106,5 @@ hold off;
 TikzName=['Tikz-',datestr(now, 'dd-mmm-yyyy'),'.tex'];
 matlab2tikz(TikzName)
 %%
+toc
 
