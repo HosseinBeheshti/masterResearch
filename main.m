@@ -1,14 +1,14 @@
 clear;
 clc;
 close all;
+%% monte carlo
+max_mcr = 100;
 %% Initialize progress bar:
 disp("start simulation");
 upd = textprogressbar(max_mcr);
-%% monte carlo
-max_mcr = 100;
 %% number of measurements
 Max_m = 25000;
-Step_m = 500;
+Step_m = 1000;
 Min_m = 100;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
