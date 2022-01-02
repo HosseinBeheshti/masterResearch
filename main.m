@@ -3,11 +3,11 @@ clc;
 close all;
 tic;
 %% monte carlo
-max_mcr = 1;
+max_mcr = 500;
 %% number of measurements
-Max_m = 25000;
-Step_m = 5000;
-Min_m = 10000;
+Max_m = 20000;
+Step_m = 500;
+Min_m = 100;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
 Error_LP = zeros(1,T_it_number);
@@ -16,20 +16,22 @@ Error_ACP = zeros(1,T_it_number);
 %% file name
 TempName = 'TempFile_';
 SimFileName = 'SimResult';
+%% signal properties
+N = 1000; % size of x
+s = 10; % sparsity of x
+n = 50; % number of dictionary rows
+T = 10; % number of batch
 %%
 disp("start simulation");
 for mcr = 1:max_mcr
     parfor itr_i=1:T_it_number
         %% Generate signal
         % define the sparse vector x
-        N = 1000;                      	% size of x
-        s = 10;                      % sparsity of x
         supp = sort(randsample(N,s));   % support of x
         x = zeros(N,1);
         x(supp) = randn(s,1);       	% entries of x on its support
         
         % Generate dictionary
-        n = 50;                         % number of dictionary rows
         D = DictionaryGenerator(n,N);
         f = D*x;
         r = 2*norm(f);                  % an (over)estimation of the magnitude of f
@@ -37,15 +39,14 @@ for mcr = 1:max_mcr
         % specify the random measurements to be used
         m = (itr_i-1)*Step_m+Min_m;     % number of measurements
         A = randn(m,n);                 % measurement matrix
- 
+        
         %% LP
         fLP_main = LP_main(D,A,f,r);
-		
+        
         %% CP
         fCP_main = CP_main(D,A,f,r,r);
         
         %% Adaptive CP
-        T = 10; % number of batch
         fACP_main = ACP_main(D,A,f,r,T);
         
         %% Compute error
@@ -72,7 +73,7 @@ Error_ACP_T = zeros(1,length(Error_ACP));
 for mcr =1:max_mcr
     FileName=[TempName,num2str(mcr)];
     load(FileName)
-    Error_LP_T = Error_LP_T+Error_LP;    
+    Error_LP_T = Error_LP_T+Error_LP;
     Error_CP_T = Error_CP_T+Error_CP;
     Error_ACP_T = Error_ACP_T+Error_ACP;
 end
@@ -80,7 +81,7 @@ Error_LP_T = Error_LP_T./max_mcr;
 Error_CP_T = Error_CP_T./max_mcr;
 Error_ACP_T = Error_ACP_T./max_mcr;
 
-SimName=[SimFileName,'_N=',num2str(1000),'_n=',num2str(100),'_s=',num2str(10),'_T=',num2str(10)];
+SimName=[SimFileName,'_N=',num2str(N),'_n=',num2str(n),'_s=',num2str(s),'_T=',num2str(T)];
 save(SimName)
 
 %% remove temporary file
