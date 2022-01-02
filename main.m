@@ -2,18 +2,6 @@ clear;
 clc;
 close all;
 tic;
-%% CVX setup
-if isunix
-    cd('./cvx_linux');
-    cvx_setup;
-    cd ..
-end
-if ispc
-    cd('./cvx_win');
-    cvx_setup;
-    cd ..
-end
-cvx_quiet true;
 %% monte carlo
 max_mcr = 1;
 %% number of measurements
@@ -29,6 +17,7 @@ Error_ACP = zeros(1,T_it_number);
 TempName = 'TempFile_';
 SimFileName = 'SimResult';
 %%
+disp("start simulation");
 for mcr = 1:max_mcr
     parfor itr_i=1:T_it_number
         %% Generate signal
