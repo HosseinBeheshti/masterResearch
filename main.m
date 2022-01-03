@@ -5,8 +5,8 @@ tic;
 %% monte carlo
 max_mcr = 200;
 %% number of measurements
-Max_m = 30000;
-Step_m = 2000;
+Max_m = 40000;
+Step_m = 1000;
 Min_m = 100;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
@@ -18,7 +18,7 @@ TempName = 'TempFile_';
 SimFileName = 'SimResult';
 %% signal properties
 N = 1000; % size of x
-s = 10; % sparsity of x
+s = 5; % sparsity of x
 n = 50; % number of dictionary rows
 T = 10; % number of batch
 %%
