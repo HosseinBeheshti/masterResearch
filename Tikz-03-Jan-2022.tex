@@ -1,0 +1,88 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.519in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=0,
+xmax=30000,
+xlabel style={font=\color{white!15!black}},
+xlabel={Number of measurments},
+ymin=-90,
+ymax=0,
+ylabel style={font=\color{white!15!black}},
+ylabel={Nomalized reconstruction error (dB)},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=black!50!green, dashdotted, line width=1.5pt, mark=asterisk, mark options={solid, black!50!green}]
+  table[row sep=crcr]{%
+100	-0.932633267705372\\
+2100	-8.2728454563634\\
+4100	-10.9632384371152\\
+6100	-12.4922799791111\\
+8100	-13.9927390655716\\
+10100	-14.6987533492081\\
+12100	-15.600673696941\\
+14100	-16.189376572436\\
+16100	-16.5698375473111\\
+18100	-17.1640526929527\\
+20100	-17.7310977004273\\
+22100	-18.2014619682509\\
+24100	-18.5455286429656\\
+26100	-18.9069131604579\\
+28100	-19.0493314355506\\
+};
+\addlegendentry{LP}
+
+\addplot [color=red, dashed, line width=1.5pt, mark=diamond, mark options={solid, red}]
+  table[row sep=crcr]{%
+100	-0.580796645882327\\
+2100	-7.18765883080573\\
+4100	-9.64495017432565\\
+6100	-11.2567021622651\\
+8100	-12.6895757110674\\
+10100	-13.3863488112548\\
+12100	-14.1616757132982\\
+14100	-14.8496040467131\\
+16100	-15.2049113672366\\
+18100	-15.929212803751\\
+20100	-16.3254106741868\\
+22100	-16.7961193795266\\
+24100	-17.1045516827058\\
+26100	-17.5540288525482\\
+28100	-17.757510793349\\
+};
+\addlegendentry{CP}
+
+\addplot [color=blue, line width=1.5pt, mark=square, mark options={solid, blue}]
+  table[row sep=crcr]{%
+100	-0.11156895249975\\
+2100	-2.77601445372052\\
+4100	-5.58434871399485\\
+6100	-8.51756545933556\\
+8100	-10.8943205751286\\
+10100	-14.2355991187214\\
+12100	-17.3540154634001\\
+14100	-20.728145348511\\
+16100	-25.6981676215969\\
+18100	-28.9234349309288\\
+20100	-33.6292892532161\\
+22100	-35.9758322947987\\
+24100	-42.6484093866139\\
+26100	-44.4933611810605\\
+28100	-88.9047051787433\\
+};
+\addlegendentry{Our algorithm}
+
+\end{axis}
+\end{tikzpicture}%
