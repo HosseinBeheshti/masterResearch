@@ -26,7 +26,7 @@ T = 10; % number of batch
 s = [5 50 100]';
 for sparsity_irt = 1:3
     %%
-    disp("start simulation with sparsity ");
+    disp("start simulation with sparsity: ",num2str(s(sparsity_irt)));
     for mcr = 1:max_mcr
         fprintf('\n monte carlo : %d\n',mcr)
         fprintf('measuerment :');
