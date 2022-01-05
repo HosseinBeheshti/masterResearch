@@ -19,7 +19,7 @@ legend('LP','CP','Our algorithm')
 ylabel('Nomalized reconstruction error (dB)')
 xlabel('Number of measurments')
 hold off;
-TikzName=['compare_recunstruction_error_',git_hash_string,'.tex'];
+TikzName = strcat('compare_recunstruction_error_',git_hash_string,'.tex');
 matlab2tikz(TikzName)
 %% compare runtime
 hold on;
