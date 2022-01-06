@@ -7,7 +7,7 @@ max_mcr = 200;
 %% number of measurements
 Max_m = 40000;
 Step_m = 1000;
-Min_m = 100;
+Min_m = 500;
 T_it_number = floor((Max_m-Min_m)/Step_m)+1;
 %% allocate vectors
 Error_LP = zeros(1,T_it_number);
@@ -23,8 +23,8 @@ SimFileName = 'SimResult';
 N = 1000; % size of x
 n = 50; % number of dictionary rows
 T = 10; % number of batch
-s = [10 50 100]';
-for sparsity_irt = 1:3
+s = [5 10 20]';
+for sparsity_irt = 1:length(s)
     %%
     notif = ['start simulation with sparsity: ',num2str(s(sparsity_irt))];
     disp(notif);
@@ -36,7 +36,7 @@ for sparsity_irt = 1:3
             % define the sparse vector x
             supp = sort(randsample(N,s(sparsity_irt)));
             x = zeros(N,1);
-            x(supp) = randn(s(sparsity_irt),1);     
+            x(supp) = randn(s(sparsity_irt),1);
             % Generate dictionary
             D = DictionaryGenerator(n,N);
             f = D*x;
@@ -91,14 +91,15 @@ for sparsity_irt = 1:3
     time_LP_T = time_LP_T./max_mcr;
     time_CP_T = time_CP_T./max_mcr;
     time_ACP_T = time_ACP_T./max_mcr;
+    %% remove temporary file and save
+    for mcr =1:max_mcr
+        FileName=[TempName,num2str(mcr)];
+        delete Temp*
+    end
     SimName=[SimFileName,'_N=',num2str(N),'_n=',num2str(n),'_s=',num2str(s(sparsity_irt)),'_T=',num2str(T),'_montecarlo_itr=',num2str(max_mcr)];
     save(SimName);
 end
-%% remove temporary file
-for mcr =1:max_mcr
-    FileName=[TempName,num2str(mcr)];
-    delete Temp*
-end
+
 %%
 disp("simulation finished");
 toc
