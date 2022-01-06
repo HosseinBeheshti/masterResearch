@@ -23,10 +23,11 @@ SimFileName = 'SimResult';
 N = 1000; % size of x
 n = 50; % number of dictionary rows
 T = 10; % number of batch
-s = [20 50 100]';
+s = [10 50 100]';
 for sparsity_irt = 1:3
     %%
-    disp("start simulation with sparsity: ",num2str(s(sparsity_irt)));
+    notif = ['start simulation with sparsity: ',num2str(s(sparsity_irt))];
+    disp(notif);
     for mcr = 1:max_mcr
         fprintf('\n monte carlo : %d\n',mcr)
         fprintf('measuerment :');
