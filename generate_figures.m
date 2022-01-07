@@ -2,34 +2,27 @@ clear;
 clc;
 close all;
 %% load data and prepare result packet
-Max_m = 40000;
-Step_m = 1000;
-Min_m = 500;
-T_it_number = floor((Max_m - Min_m) / Step_m) + 1;
-simulaiton_result.iteration_number = T_it_number;
-simulaiton_result.step_m = Step_m;
-simulaiton_result.min_m = Min_m;
 % s = 10
-simulaiton_result.s10.error_lp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s10.error_cp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s10.error_acp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s10.time_lp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s10.time_cp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s10.time_acp = zeros(1, simulaiton_result.iteration_number);
+simulaiton_result.s10.error_lp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s10.error_cp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s10.error_acp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s10.time_lp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s10.time_cp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s10.time_acp = zeros(1, simulaiton_result.total_itr_number);
 % s = 20
-simulaiton_result.s20.error_lp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s20.error_cp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s20.error_acp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s20.time_lp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s20.time_cp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s20.time_acp = zeros(1, simulaiton_result.iteration_number);
+simulaiton_result.s20.error_lp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s20.error_cp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s20.error_acp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s20.time_lp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s20.time_cp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s20.time_acp = zeros(1, simulaiton_result.total_itr_number);
 % s = 20
-simulaiton_result.s30.error_lp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s30.error_cp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s30.error_acp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s30.time_lp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s30.time_cp = zeros(1, simulaiton_result.iteration_number);
-simulaiton_result.s30.time_acp = zeros(1, simulaiton_result.iteration_number);
+simulaiton_result.s30.error_lp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s30.error_cp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s30.error_acp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s30.time_lp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s30.time_cp = zeros(1, simulaiton_result.total_itr_number);
+simulaiton_result.s30.time_acp = zeros(1, simulaiton_result.total_itr_number);
 % fill result arguments
 load('SimResult_N=1000_n=50_s=10_T=10_montecarlo_itr=100');
 simulaiton_result.s10.error_lp = Error_LP_T;
@@ -62,11 +55,11 @@ git_hash_string = convertCharsToStrings(git_hash_char);
 git_hash_string = strtrim(git_hash_string);
 %% compare recunstruction error
 hold on;
-plot(((0:(simulaiton_result.iteration_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.s20.error_lp), ...
+plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.s20.error_lp), ...
     'DisplayName', 'LP', 'Marker', '*', 'LineStyle', '-.', 'Color', [0 0.5 0], 'LineWidth', 1.5);
-plot(((0:(simulaiton_result.iteration_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.s20.error_cp), ...
+plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.s20.error_cp), ...
     'DisplayName', 'CP', 'Marker', 'diamond', 'LineStyle', '--', 'Color', [1 0 0], 'LineWidth', 1.5);
-plot(((0:(simulaiton_result.iteration_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.s20.error_acp), ...
+plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.s20.error_acp), ...
     'DisplayName', 'Our algorithm', 'Marker', 'square', 'Color', [0 0 1], 'LineWidth', 1.5);
 legend('LP', 'CP', 'Our algorithm');
 ylabel('Nomalized reconstruction error (dB)');
@@ -76,11 +69,11 @@ TikzName = strcat('compare_recunstruction_error_', git_hash_string, '.tex');
 matlab2tikz(TikzName);
 %% compare runtime
 hold on;
-plot(((0:(simulaiton_result.iteration_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), simulaiton_result.s20.time_lp, ...
+plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), simulaiton_result.s20.time_lp, ...
     'DisplayName', 'LP', 'Marker', '*', 'LineStyle', '-.', 'Color', [0 0.5 0], 'LineWidth', 1.5);
-plot(((0:(simulaiton_result.iteration_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), simulaiton_result.s20.time_cp, ...
+plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), simulaiton_result.s20.time_cp, ...
     'DisplayName', 'CP', 'Marker', 'diamond', 'LineStyle', '--', 'Color', [1 0 0], 'LineWidth', 1.5);
-plot(((0:(simulaiton_result.iteration_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), simulaiton_result.s20.time_acp, ...
+plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), simulaiton_result.s20.time_acp, ...
     'DisplayName', 'Our algorithm', 'Marker', 'square', 'Color', [0 0 1], 'LineWidth', 1.5);
 legend('LP', 'CP', 'Our algorithm');
 ylabel('Nomalized runtime (ms)');
@@ -91,11 +84,11 @@ matlab2tikz(TikzName);
 %% compare sparsity effects
 hold on;
 
-plot(((0:(simulaiton_result.iteration_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.s10.error_acp), ...
+plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.s10.error_acp), ...
     'DisplayName', 's = 10', 'Marker', '*', 'LineStyle', '-.', 'Color', [0 0.5 0], 'LineWidth', 1.5);
-plot(((0:(simulaiton_result.iteration_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.s20.error_acp), ...
+plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.s20.error_acp), ...
     'DisplayName', 's = 20', 'Marker', 'diamond', 'LineStyle', '--', 'Color', [1 0 0], 'LineWidth', 1.5);
-plot(((0:(simulaiton_result.iteration_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.s30.error_acp), ...
+plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.s30.error_acp), ...
     'DisplayName', 's = 30', 'Marker', 'square', 'Color', [0 0 1], 'LineWidth', 1.5);
 legend('s = 10', 's = 20', 's = 30');
 ylabel('Nomalized reconstruction error (dB)');
