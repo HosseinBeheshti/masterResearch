@@ -53,18 +53,26 @@ for mcr = 1:max_mcr
         m = (itr_i - 1) * step_m + min_m;
         A = randn(m, n);
         %% LP
+        temp_lp_time = tic;
+
         if (s == 20)
-            temp_lp_time = tic;
             fLP_main = LP_main(D, A, f, r);
-            time_lp(itr_i) = toc(temp_lp_time);
+        else
+            fLP_main = zeros(size(f));
         end
 
+        time_lp(itr_i) = toc(temp_lp_time);
+
         %% CP
+        temp_cp_time = tic;
+
         if (s == 20)
-            temp_cp_time = tic;
             fCP_main = CP_main(D, A, f, r, r);
-            time_cp(itr_i) = toc(temp_cp_time);
+        else
+            fCP_main = zeros(size(f));
         end
+
+        time_cp(itr_i) = toc(temp_cp_time);
 
         %% Adaptive CP
         temp_acp_time = tic;
