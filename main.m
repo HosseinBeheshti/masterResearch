@@ -101,7 +101,7 @@ for sparsity_irt = 1:length(s)
     %% remove temporary file and save
     for mcr = 1:max_mcr
         FileName = [TempName, num2str(mcr)];
-        delete Temp *;
+        delete TempFile_*;
     end
 
     SimName = [SimFileName, '_N=', num2str(N), '_n=', num2str(n), '_s=', num2str(s(sparsity_irt)), '_T=', num2str(T), '_montecarlo_itr=', num2str(max_mcr)];
