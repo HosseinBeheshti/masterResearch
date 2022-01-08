@@ -22,10 +22,10 @@ simulaiton_result.simulaiton_result_s30 = simulaiton_result_s30;
 simulaiton_result = rmfield(simulaiton_result, 'temp');
 save('final_result', 'simulaiton_result');
 %% cleanup repository
-FileName = 'simulation_result_*.mat';
-delete(FileName);
-FileName = 'compare_*.tex';
-delete(FileName);
+file_name = 'simulation_result_*.mat';
+delete(file_name);
+file_name = 'compare_*.tex';
+delete(file_name);
 clear;
 load('final_result');
 %% get git hash
@@ -35,11 +35,11 @@ git_hash_string = strtrim(git_hash_string);
 %% compare recunstruction error
 close all;
 hold on;
-plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.simulaiton_result_s20.error_lp), ...
+plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.simulaiton_result_s10.error_lp), ...
     'DisplayName', 'LP', 'Marker', '*', 'LineStyle', '-.', 'Color', [0 0.5 0], 'LineWidth', 1.5);
-plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.simulaiton_result_s20.error_cp), ...
+plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.simulaiton_result_s10.error_cp), ...
     'DisplayName', 'CP', 'Marker', 'diamond', 'LineStyle', '--', 'Color', [1 0 0], 'LineWidth', 1.5);
-plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.simulaiton_result_s20.error_acp), ...
+plot(((0:(simulaiton_result.total_itr_number - 1)) * simulaiton_result.step_m + simulaiton_result.min_m), 10 * log10(simulaiton_result.simulaiton_result_s10.error_acp), ...
     'DisplayName', 'Our algorithm', 'Marker', 'square', 'Color', [0 0 1], 'LineWidth', 1.5);
 legend('LP', 'CP', 'Our algorithm');
 ylabel('Nomalized reconstruction error (dB)');

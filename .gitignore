@@ -1,4 +1,4 @@
 *.asv
 *.m~
-TempFile_*
+temp_file_*
 compare_*.tex
