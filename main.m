@@ -6,7 +6,7 @@ max_mcr = 100;
 %% number of measurements
 max_m = 30000;
 step_m = 1000;
-min_m = 2000;
+min_m = 500;
 total_itr_number = floor((max_m - min_m) / step_m) + 1;
 %% allocate vectors
 error_lp = zeros(1, total_itr_number);
