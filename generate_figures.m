@@ -3,13 +3,13 @@ clc;
 close all;
 %% load data and prepare result packet
 % s = 10
-load('simulation_result_N=1000_n=50_s=10_T=10_montecarlo_itr=2');
+load('simulation_result_N=1000_n=50_s=10_T=10_montecarlo_itr=200');
 simulaiton_result_s10 = simulaiton_result.temp;
 % s = 20
-load('simulation_result_N=1000_n=50_s=20_T=10_montecarlo_itr=2');
+load('simulation_result_N=1000_n=50_s=20_T=10_montecarlo_itr=200');
 simulaiton_result_s20 = simulaiton_result.temp;
 % s = 30
-load('simulation_result_N=1000_n=50_s=30_T=10_montecarlo_itr=2');
+load('simulation_result_N=1000_n=50_s=30_T=10_montecarlo_itr=200');
 simulaiton_result_s30 = simulaiton_result.temp;
 %% save final data
 simulaiton_result.total_itr_number = simulaiton_result.temp.total_itr_number;
