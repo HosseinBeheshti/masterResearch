@@ -11,6 +11,7 @@ x = linspace(-9, 9);
 l_cp = zeros(length(slope_cp), length(x));
 Polyhedron_cp = zeros(4, 2);
 figure_cp = figure;
+ylim([-10, 10]);
 hold on;
 plot(f_sim(1), f_sim(2), '.b', 'markersize', 10);
 
@@ -33,7 +34,9 @@ pgon_cp = polyshape(Polyhedron_cp(:, 1), Polyhedron_cp(:, 2));
 plot(pgon_cp, 'FaceColor', 'red', 'FaceAlpha', 0.1);
 legend('$f$', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'Poly1', 'Interpreter', 'latex');
 hold off;
-saveas(gcf, 'CP.png')
+f_out = gcf;
+exportgraphics(f_out, 'hdtg_cp.pdf', 'ContentType', 'vector', ...
+    'BackgroundColor', 'none', 'Resolution', 300);
 %% ACP
 pause(1);
 close all;
@@ -42,6 +45,7 @@ offset_acp = [5.80, -5.76, -12.21, 7.53, 0.31, -3.30, -9.43, 0.34];
 Polyhedron_acp1 = zeros(4, 2);
 Polyhedron_acp2 = zeros(4, 2);
 figure2_acp = figure;
+ylim([-10, 10]);
 hold on;
 plot(f_sim(1), f_sim(2), '.b', 'markersize', 10);
 l_acp = zeros(length(slope_acp), length(x));
@@ -71,4 +75,8 @@ pgon_acp2 = polyshape(Polyhedron_acp2(:, 1), Polyhedron_acp2(:, 2));
 plot(pgon_acp2, 'FaceColor', 'green', 'FaceAlpha', 0.5);
 legend('$f$', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'Poly1', 'Poly2', 'Interpreter', 'latex');
 hold off;
-saveas(gcf, 'ACP.png')
+f_out = gcf;
+exportgraphics(f_out, 'hdtg_acp.pdf', 'ContentType', 'vector', ...
+    'BackgroundColor', 'none', 'Resolution', 300);
+
+close all;
