@@ -22,8 +22,6 @@ simulaiton_result.simulaiton_result_s30 = simulaiton_result_s30;
 simulaiton_result = rmfield(simulaiton_result, 'temp');
 save('final_result', 'simulaiton_result');
 %% cleanup repository
-file_name = 'simulation_result_*.mat';
-delete(file_name);
 file_name = 'compare_*.tex';
 delete(file_name);
 clear;
