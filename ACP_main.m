@@ -2,6 +2,7 @@ function fACP_main = ACP_main(D, A, f, r, T)
     % Adaptive second-order cone programming
     [m, n] = size(A);
     fACP_main = zeros(n, T + 1);
+    exception_counter = 0;
 
     for t = 1:T
         ATemp = A((t - 1) * m / T + 1:t * m / T, :);
@@ -13,6 +14,9 @@ function fACP_main = ACP_main(D, A, f, r, T)
         catch
             fCPTemp = fACP_main(:, t);
             warning('########################### ACP exception occurred ###########################');
+            if exception_counter < 4
+                t = t-1;
+            end
         end
 
         fACP_main(:, t + 1) = fCPTemp;

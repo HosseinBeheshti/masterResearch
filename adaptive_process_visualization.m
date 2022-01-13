@@ -52,7 +52,7 @@ l_acp = zeros(length(slope_acp), length(x));
 for i = 1:number_of_lines
     l_acp(i, :) = slope_acp(i) * x + offset_acp(i);
 
-    if i < 5
+    if i > 5
         plot(x, l_acp(i, :), ':', 'LineWidth', 2);
     else
         plot(x, l_acp(i, :), 'LineWidth', 2);
