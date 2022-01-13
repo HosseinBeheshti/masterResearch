@@ -3,7 +3,7 @@ clc;
 close all;
 rng default;
 %% monte carlo
-max_mcr = 5;
+max_mcr = 100;
 %% number of measurements
 max_m = 30000;
 step_m = 5000;
