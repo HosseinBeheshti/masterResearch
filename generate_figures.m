@@ -3,23 +3,39 @@ clc;
 close all;
 %% load data and prepare result packet
 % s = 10
-load('simulation_result_N=1000_n=50_s=10_T=10_montecarlo_itr=200');
-simulaiton_result_s10 = simulaiton_result.temp;
+load('simulation_result_N=1000_n=50_s=10_T=10_montecarlo_itr=5');
+simulaiton_result_s10.error_lp = mean(simulaiton_result.error_lp);
+simulaiton_result_s10.error_cp = mean(simulaiton_result.error_cp);
+simulaiton_result_s10.error_acp = mean(simulaiton_result.error_acp);
+simulaiton_result_s10.time_lp = mean(simulaiton_result.time_lp);
+simulaiton_result_s10.time_cp = mean(simulaiton_result.time_cp);
+simulaiton_result_s10.time_acp = mean(simulaiton_result.time_acp);
 % s = 20
-load('simulation_result_N=1000_n=50_s=20_T=10_montecarlo_itr=200');
-simulaiton_result_s20 = simulaiton_result.temp;
+load('simulation_result_N=1000_n=50_s=20_T=10_montecarlo_itr=5');
+simulaiton_result_s20.error_lp = mean(simulaiton_result.error_lp);
+simulaiton_result_s20.error_cp = mean(simulaiton_result.error_cp);
+simulaiton_result_s20.error_acp = mean(simulaiton_result.error_acp);
+simulaiton_result_s20.time_lp = mean(simulaiton_result.time_lp);
+simulaiton_result_s20.time_cp = mean(simulaiton_result.time_cp);
+simulaiton_result_s20.time_acp = mean(simulaiton_result.time_acp);
 % s = 30
-load('simulation_result_N=1000_n=50_s=30_T=10_montecarlo_itr=200');
-simulaiton_result_s30 = simulaiton_result.temp;
+load('simulation_result_N=1000_n=50_s=30_T=10_montecarlo_itr=5');
+simulaiton_result_s30.error_lp = mean(simulaiton_result.error_lp);
+simulaiton_result_s30.error_cp = mean(simulaiton_result.error_cp);
+simulaiton_result_s30.error_acp = mean(simulaiton_result.error_acp);
+simulaiton_result_s30.time_lp = mean(simulaiton_result.time_lp);
+simulaiton_result_s30.time_cp = mean(simulaiton_result.time_cp);
+simulaiton_result_s30.time_acp = mean(simulaiton_result.time_acp);
 %% save final data
-simulaiton_result.total_itr_number = simulaiton_result.temp.total_itr_number;
-simulaiton_result.min_m = simulaiton_result.temp.min_m;
-simulaiton_result.step_m = simulaiton_result.temp.step_m;
-simulaiton_result.plot_pause_time = 5;
 simulaiton_result.simulaiton_result_s10 = simulaiton_result_s10;
 simulaiton_result.simulaiton_result_s20 = simulaiton_result_s20;
 simulaiton_result.simulaiton_result_s30 = simulaiton_result_s30;
-simulaiton_result = rmfield(simulaiton_result, 'temp');
+simulaiton_result = rmfield(simulaiton_result, 'error_lp');
+simulaiton_result = rmfield(simulaiton_result, 'error_cp');
+simulaiton_result = rmfield(simulaiton_result, 'error_acp');
+simulaiton_result = rmfield(simulaiton_result, 'time_lp');
+simulaiton_result = rmfield(simulaiton_result, 'time_cp');
+simulaiton_result = rmfield(simulaiton_result, 'time_acp');
 save('final_result', 'simulaiton_result');
 %% cleanup repository
 file_name = 'compare_*.tex';
@@ -30,6 +46,7 @@ load('final_result');
 [~, git_hash_char] = system('git rev-parse --short HEAD');
 git_hash_string = convertCharsToStrings(git_hash_char);
 git_hash_string = strtrim(git_hash_string);
+plot_pause_time = 5;
 %% compare recunstruction error
 close all;
 hold on;
@@ -43,7 +60,7 @@ legend('LP', 'CP', 'Our algorithm');
 ylabel('Nomalized reconstruction error (dB)');
 xlabel('Number of measurments');
 hold off;
-pause(simulaiton_result.plot_pause_time);
+pause(plot_pause_time);
 TikzName = convertStringsToChars(strcat('compare_recunstruction_error_', git_hash_string, '.tex'));
 matlab2tikz(TikzName);
 %% compare runtime
@@ -59,7 +76,7 @@ legend('LP', 'CP', 'Our algorithm');
 ylabel('Nomalized runtime (ms)');
 xlabel('Number of measurments');
 hold off;
-pause(simulaiton_result.plot_pause_time);
+pause(plot_pause_time);
 TikzName = convertStringsToChars(strcat('compare_runtime_', git_hash_string, '.tex'));
 matlab2tikz(TikzName);
 %% compare sparsity effects
@@ -75,6 +92,6 @@ legend('s = 10', 's = 20', 's = 30');
 ylabel('Nomalized reconstruction error (dB)');
 xlabel('Number of measurments');
 hold off;
-pause(simulaiton_result.plot_pause_time);
+pause(plot_pause_time);
 TikzName = convertStringsToChars(strcat('compare_sparsity_effects_', git_hash_string, '.tex'));
 matlab2tikz(TikzName);
