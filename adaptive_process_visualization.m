@@ -35,8 +35,7 @@ plot(pgon_cp, 'FaceColor', 'red', 'FaceAlpha', 0.1);
 legend('$f$', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'Poly1', 'Interpreter', 'latex');
 hold off;
 f_out = gcf;
-exportgraphics(f_out, 'hdtg_cp.pdf', 'ContentType', 'vector', ...
-    'BackgroundColor', 'none', 'Resolution', 300);
+exportgraphics(f_out, 'hdtg_cp.png', 'BackgroundColor', 'none', 'Resolution', 300);
 %% ACP
 pause(1);
 close all;
@@ -53,7 +52,7 @@ l_acp = zeros(length(slope_acp), length(x));
 for i = 1:number_of_lines
     l_acp(i, :) = slope_acp(i) * x + offset_acp(i);
 
-    if i < 5
+    if i > 5
         plot(x, l_acp(i, :), ':', 'LineWidth', 2);
     else
         plot(x, l_acp(i, :), 'LineWidth', 2);
@@ -76,7 +75,6 @@ plot(pgon_acp2, 'FaceColor', 'green', 'FaceAlpha', 0.5);
 legend('$f$', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'Poly1', 'Poly2', 'Interpreter', 'latex');
 hold off;
 f_out = gcf;
-exportgraphics(f_out, 'hdtg_acp.pdf', 'ContentType', 'vector', ...
-    'BackgroundColor', 'none', 'Resolution', 300);
+exportgraphics(f_out, 'hdtg_acp.png', 'BackgroundColor', 'none', 'Resolution', 300);
 
 close all;
