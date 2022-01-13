@@ -1,7 +1,7 @@
 function fACP_main = ACP_main(D, A, f, r, T)
     % Adaptive second-order cone programming
     [m, n] = size(A);
-    fACP_main = zeros(n, T + 1);
+    fACP_main = zeros(n, T + 1)+eps;
 
     for t = 1:T
         ATemp = A(1:t * m / T, :);
