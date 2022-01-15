@@ -1,21 +1,26 @@
 function fACP_main = ACP_main(D, A, f, r, T)
     % Adaptive second-order cone programming
     [m, n] = size(A);
-    fACP_main = zeros(n, T + 1)+eps;
+    fACP_main = zeros(n, T + 1) + eps;
 
     for t = 1:T
         ATemp = A(1:t * m / T, :);
-        tauTemp = DitherGenerator(size(ATemp,1), (2)^(-t) .* r / t);
+        tauTemp = DitherGenerator(size(ATemp, 1), (2)^(-t) .* r / t);
         yTemp = sign(ATemp * (f - fACP_main(:, t)) - tauTemp);
 
         try
-            fCPTemp = fACP_main(:, t) + ACP(yTemp, ATemp, D, tauTemp, (2)^(-t) .* r / t);
+            fCPTemp = ACP(yTemp, ATemp, D, tauTemp, (2)^(-t) .* r / t);
         catch
-            fCPTemp = fACP_main(:, t);
+            fCPTemp = 0;
             warning('########################### ACP exception occurred ###########################');
         end
 
-        fACP_main(:, t + 1) = fCPTemp;
+        if (max(isnan(fCPTemp)))
+            fACP_main(:, t + 1) = fACP_main(:, t);
+        else
+            fACP_main(:, t + 1) = fCPTemp + fACP_main(:, t);
+        end
+
         %% visiual adaptivity
         if n == 2
 
