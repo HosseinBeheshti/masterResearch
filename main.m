@@ -6,7 +6,7 @@ rng default;
 max_mcr = 100;
 %% number of measurements
 max_m = 30000;
-step_m = 5000;
+step_m = 1000;
 min_m = 500;
 total_itr_number = floor((max_m - min_m) / step_m) + 1;
 %% allocate vectors
