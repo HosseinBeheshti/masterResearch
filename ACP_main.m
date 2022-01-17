@@ -4,7 +4,7 @@ function fACP_main = ACP_main(D, A, f, r, T)
     fACP_main = zeros(n, T + 1) + eps;
 
     for t = 1:T
-        ATemp = A(1:t * m / T, :);
+        ATemp = A((t - 1) * m / T + 1:t * m / T, :);
         tauTemp = DitherGenerator(size(ATemp, 1), (2)^(-t) .* r / t);
         yTemp = sign(ATemp * (f - fACP_main(:, t)) - tauTemp);
 

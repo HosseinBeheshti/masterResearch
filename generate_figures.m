@@ -3,7 +3,7 @@ clc;
 close all;
 %% load data and prepare result packet
 % s = 10
-load('simulation_result_N=1000_n=50_s=10_T=10_montecarlo_itr=100');
+load('simulation_result_N=1000_n=50_s=10_T=10_montecarlo_itr=10');
 final_result_s10.error_lp = mean(simulaiton_result.error_lp);
 final_result_s10.error_cp = mean(simulaiton_result.error_cp);
 final_result_s10.error_acp = mean(simulaiton_result.error_acp);
@@ -11,7 +11,7 @@ final_result_s10.time_lp = mean(simulaiton_result.time_lp);
 final_result_s10.time_cp = mean(simulaiton_result.time_cp);
 final_result_s10.time_acp = mean(simulaiton_result.time_acp);
 % s = 20
-load('simulation_result_N=1000_n=50_s=20_T=10_montecarlo_itr=100');
+load('simulation_result_N=1000_n=50_s=20_T=10_montecarlo_itr=10');
 final_result_s20.error_lp = mean(simulaiton_result.error_lp);
 final_result_s20.error_cp = mean(simulaiton_result.error_cp);
 final_result_s20.error_acp = mean(simulaiton_result.error_acp);
@@ -19,7 +19,7 @@ final_result_s20.time_lp = mean(simulaiton_result.time_lp);
 final_result_s20.time_cp = mean(simulaiton_result.time_cp);
 final_result_s20.time_acp = mean(simulaiton_result.time_acp);
 % s = 30
-load('simulation_result_N=1000_n=50_s=30_T=10_montecarlo_itr=100');
+load('simulation_result_N=1000_n=50_s=30_T=10_montecarlo_itr=10');
 final_result_s30.error_lp = mean(simulaiton_result.error_lp);
 final_result_s30.error_cp = mean(simulaiton_result.error_cp);
 final_result_s30.error_acp = mean(simulaiton_result.error_acp);
@@ -75,7 +75,7 @@ xlabel('Number of measurments');
 hold off;
 pause(plot_pause_time);
 TikzName = convertStringsToChars(strcat('compare_runtime_', git_hash_string, '.tex'));
-matlab2tikz(TikzName);
+% matlab2tikz(TikzName);
 %% compare sparsity effects
 close all;
 hold on;
