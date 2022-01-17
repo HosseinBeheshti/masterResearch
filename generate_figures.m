@@ -7,7 +7,7 @@ load('final_result');
 [~, git_hash_char] = system('git rev-parse --short HEAD');
 git_hash_string = convertCharsToStrings(git_hash_char);
 git_hash_string = strtrim(git_hash_string);
-plot_pause_time = 5;
+plot_pause_time = 1;
 %% compare recunstruction error
 close all;
 hold on;
