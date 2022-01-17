@@ -75,7 +75,7 @@ xlabel('Number of measurments');
 hold off;
 pause(plot_pause_time);
 TikzName = convertStringsToChars(strcat('compare_runtime_', git_hash_string, '.tex'));
-% matlab2tikz(TikzName);
+matlab2tikz(TikzName);
 %% compare sparsity effects
 close all;
 hold on;
