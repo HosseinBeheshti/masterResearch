@@ -22,8 +22,8 @@ temp_name = 'temp_file_';
 N = 1000; % size of x
 n = 50; % number of dictionary rows
 T = 10; % number of batch
-s = [10 20 30]'; % sparsity level
-full_simulation_sparsity = 10;
+s = [20 30 40]'; % sparsity level
+full_simulation_sparsity = 20;
 %%
 simulaiton_result.total_itr_number = total_itr_number;
 simulaiton_result.step_m = step_m;
