@@ -3,10 +3,10 @@ clc;
 close all;
 rng default;
 %% monte carlo
-max_mcr = 100;
+max_mcr = 10;
 %% number of measurements
 max_m = 30000;
-step_m = 5000;
+step_m = 1000;
 min_m = 500;
 total_itr_number = floor((max_m - min_m) / step_m) + 1;
 %% allocate vectors
@@ -22,8 +22,8 @@ temp_name = 'temp_file_';
 N = 1000; % size of x
 n = 50; % number of dictionary rows
 T = 10; % number of batch
-s = [10 20 30]'; % sparsity level
-full_simulation_sparsity = 10;
+s = [20 30 40]'; % sparsity level
+full_simulation_sparsity = 20;
 %%
 simulaiton_result.total_itr_number = total_itr_number;
 simulaiton_result.step_m = step_m;
